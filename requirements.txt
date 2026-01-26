@@ -1,0 +1,7 @@
+asgiref>=3.7
+Django>=4.2,<6
+django-crispy-forms>=1.14.0
+django-ranged-response==0.2.0
+Pillow>=11
+sqlparse>=0.4.4
+loguru==0.7.2

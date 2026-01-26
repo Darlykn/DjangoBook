@@ -1,0 +1,173 @@
+{% extends "shop/base.html" %}
+
+{% load static %}
+
+{% block title %}
+    {{ product.category }}: {{ product.title }}
+{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <div class="row">
+        <!-- Левая колонка для изображения -->
+        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+            <img src="{{ product.image.url }}" alt="{{ product.title }}" class="img-fluid rounded-0">
+        </div>
+
+        <!-- Центральная колонка для описания и действий с товаром -->
+        <div class="col-md-6 col-lg-6 ">
+            <div class="product-details">
+                <h2 class="mt-4 font-weight-bold">{{ product.title }}</h2>
+                <div>
+                    <span class="text-grey">Категория:</span>
+                    <a class="custom-a" href="{{ product.id_category.get_absolute_url }}"> {{ product.id_category.title }}</a>
+                </div>
+                <p class="text-grey">Автор: {{ product.author }}</p>
+                <p class="product-description">{{ product.description }}</p>
+                {% if product.quantity > 0 %}
+                    <div class="alert alert-success text-center">В наличии</div>
+                {% else %}
+                    <div class="alert alert-danger text-center">Временно недоступен</div>
+                {% endif %}
+                <hr>
+               <div class="review">
+                    <span class="font-weight-bold text-grey">Средний рейтинг: {{ product.get_average_review_score }}/5.0</span>
+                    {% if user.is_authenticated and can_review and not has_reviewed %}
+                        <div class="mb-3 font-weight-bold">
+                            <a href="" class="custom-a" data-toggle="modal" data-target="#myModal">Оставить отзыв</a>
+                        </div>
+                    {% elif user.is_authenticated and not can_review %}
+                        <div class="mb-3">
+                            <br>
+                            <p> Вам необходимо приобрести и получить товар, чтобы оставить отзыв. </p>
+                        </div>
+                    {% elif user.is_authenticated and has_reviewed %}
+                        <div class="mb-3">
+                            <br>
+                            <p> Вы уже оставили отзыв на этот товар. </p>
+                        </div>
+                    {% else %}
+                        <div class="mb-3 font-weight-bold">
+                            <a href="{% url 'users:login' %}" class="custom-a">Войдите</a> в аккаунт, чтобы оставить отзыв.
+                        </div>
+                    {% endif %}
+                </div>
+                    <div class="mb-4">
+                    <form action="{% url 'cart:cart_add' product.id %}" method="post">
+                        {% csrf_token %}
+                        <span class="input-group add-to-cart shadow-custom">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text font-weight-bold px-3 price">₽{{ product.price }}</span>
+                            </div>
+                            {{ cart_product_form.quantity }}
+                            <div class="input-group-append">
+                                <button class="btn btn-primary px-4 reduce_padding" type="submit" data-toggle="tooltip" data-placement="top" title="Добавить в корзину">
+                                    <i class="fas fa-shopping-cart"></i>
+                                </button>
+                            </div>
+                        </span>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Правая колонка для дополнительной информации, скрываем на маленьких экранах -->
+        <div class="col-lg-2 d-none d-lg-block">
+            <div class="info-box">
+                <h5 class="my-3">Самое важное</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="custom-check bi bi-check-circle-fill"></i> Склады во многих городах России</li>
+                        <li><i class="custom-check bi bi-check-circle-fill"></i> Отправка 2-5 рабочих дней</li>
+                        <li><i class="custom-check bi bi-check-circle-fill"></i> «В наличии» — точно в наличии</li>
+                    </ul>
+                    <h5 class="my-4">Оплата при получении</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="custom-check bi bi-check-circle-fill"></i> Наличными</li>
+                        <li><i class="custom-check bi bi-check-circle-fill"></i> Картой</li>
+                        <li><i class="custom-check bi bi-check-circle-fill"></i> Перечислением</li>
+                    </ul>
+                    <h5 class="my-4">Доставка</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="custom-check bi bi-check-circle-fill"></i> Курьером до двери</li>
+                    </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Секция отзывов -->
+    <div class="row mt-4">
+        <div class="col-12">
+           <h3 class="py-2">Отзывы:</h3>
+            {% for review in product.reviews.all %}
+                <span class="font-weight-bold py-2 text-grey">
+                    {% if review.id_user %}
+                        {{ review.id_user.name }} - {{ review.rating }}/5
+                    {% else %}
+                        Анонимный - {{ review.rating }}/5
+                    {% endif %}
+                </span>
+                <span class="text-justify pb-2">{{ review.text }}</span>
+                <hr>
+            {% empty %}
+                <span class="pb-2">Пока нет отзывов</span>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- Modal для отзывов -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="reviewModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reviewModalLabel">Оставьте свой отзыв</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="bg-grey">
+                        <div class="text-center pt-2">
+                            Рейтинг:
+                            <div id="full-stars" class="d-inline text-center">
+                                <div class="rating-group">
+                                    <label class="rating__label" for="id_rating_0">
+                                        <i class="rating__icon rating__icon--star fa fa-star">1</i>
+                                    </label>
+                                    <input class="rating__input" name="rating" id="id_rating_0" value="1" type="radio" required>
+                                    <label class="rating__label" for="id_rating_1">
+                                        <i class="rating__icon rating__icon--star fa fa-star">2</i>
+                                    </label>
+                                    <input class="rating__input" name="rating" id="id_rating_1" value="2" type="radio" required>
+                                    <label class="rating__label" for="id_rating_2">
+                                        <i class="rating__icon rating__icon--star fa fa-star">3</i>
+                                    </label>
+                                    <input class="rating__input" name="rating" id="id_rating_2" value="3" type="radio" required>
+                                    <label class="rating__label" for="id_rating_3">
+                                        <i class="rating__icon rating__icon--star fa fa-star">4</i>
+                                    </label>
+                                    <input class="rating__input" name="rating" id="id_rating_3" value="4" type="radio" required>
+                                    <label class="rating__label" for="id_rating_4">
+                                        <i class="rating__icon rating__icon--star fa fa-star">5</i>
+                                    </label>
+                                    <input class="rating__input" name="rating" checked id="id_rating_4" value="5" type="radio" required>
+                                </div>
+                            </div>
+                        </div>
+                        <hr class="m-0">
+                        <div class="input-field text-center p-2">
+                            {{ review_form.text }}
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" type="submit">Подтвердить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

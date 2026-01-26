@@ -1,0 +1,48 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block title %}
+    Оформление заказа
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="alert alert-danger custom-alert">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <div class="row" style="margin-top: 6%">
+            <div class="col-md-5">
+                <h4 class="page-header">Заполните данные</h4>
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    <div class="form-error">{{ form.non_field_errors }}</div>
+                    {% for f in form %}
+                        {% if f.name != "customer" and f.name != "status" %}
+                            <div class="form-group">
+                                <label class="form-label" for="{{ f.id_for_label }}"> {{ f.label }}: </label>
+                                {{ f }}
+                                <div class="form-error">{{ f.errors }}</div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                    <button type="submit" class="btn btn-outline-custom">Подтвердить заказ</button>
+                </form>
+            </div>
+            <div class="col-md-4 offset-md-1">
+                <ul class="list-group">
+                    <li class="list-group-item active" style="background-color: #fd9476; border-color: #fd9476; margin: 5px 0 0 0">
+                        Заказ на сумму: {{ cart_total_price }} ₽</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock %}

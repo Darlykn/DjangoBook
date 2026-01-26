@@ -1,0 +1,29 @@
+{% extends "shop/base.html" %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block content %}
+    <h1 class="ml-3 mt-4">{{ title }}</h1>
+    <div class="col-md-5 ml-2">
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="form-error">{{ form.non_field_errors }}</div>
+
+            {% for f in form %}
+                <div class="form-group"> <!-- Обертка для каждого поля с меткой и ошибками -->
+                    <label class="form-label" for="{{ f.id_for_label }}">
+                        {{ f.label }}:
+                    </label>
+                    {{ f }}
+                    <div class="form-error">{{ f.errors }}</div>
+                </div>
+            {% endfor %}
+
+            <button type="submit" class="btn btn-outline-custom">Регистрация</button>
+        </form>
+        <br>
+    </div>
+{% endblock %}
