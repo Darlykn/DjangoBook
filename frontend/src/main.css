@@ -1,0 +1,7 @@
+@import "tailwindcss";
+
+/* Сканировать Django шаблоны для генерации классов */
+@source "../../django_shop/shop/templates/**/*.html";
+
+/* Здесь позже можно добавить свои глобальные стили для DARLY */
+

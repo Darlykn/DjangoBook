@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'crispy_forms',
+    'django_vite',
 
     'shop.apps.ShopConfig',
     'cart.apps.CartConfig',
@@ -132,4 +133,17 @@ MESSAGE_TAGS = {
     messages.SUCCESS: 'alert-success',
     messages.WARNING: 'alert-warning',
     messages.ERROR: 'alert-danger',
+}
+
+# Django Vite настройки
+# VITE_DEV_MODE=True когда запущен Vite dev server (npm run dev), False для production сборки
+VITE_DEV_MODE = False  # Поменять на True если запускаете `npm run dev` для HMR
+
+DJANGO_VITE = {
+    "default": {
+        "dev_mode": VITE_DEV_MODE,
+        "dev_server_port": 5173,
+        "manifest_path": BASE_DIR / "django_shop" / "static" / "dist" / ".vite" / "manifest.json",
+        "static_url_prefix": "dist",
+    }
 }
