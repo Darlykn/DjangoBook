@@ -7,167 +7,418 @@
 {% endblock %}
 
 {% block content %}
-<div class="container my-4">
-    <div class="row">
-        <!-- Левая колонка для изображения -->
-        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
-            <img src="{{ product.image.url }}" alt="{{ product.title }}" class="img-fluid rounded-0">
-        </div>
-
-        <!-- Центральная колонка для описания и действий с товаром -->
-        <div class="col-md-6 col-lg-6 ">
-            <div class="product-details">
-                <h2 class="mt-4 font-weight-bold">{{ product.title }}</h2>
-                <div>
-                    <span class="text-grey">Категория:</span>
-                    <a class="custom-a" href="{{ product.id_category.get_absolute_url }}"> {{ product.id_category.title }}</a>
+<div class="max-w-7xl mx-auto">
+    <!-- Основной контент: три колонки -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- Левая колонка: Изображение книги -->
+        <div class="lg:col-span-4">
+            <div class="sticky top-24">
+                <div class="bg-white rounded-2xl shadow-lg p-4 overflow-hidden">
+                    <img src="{{ product.image.url }}" 
+                         alt="{{ product.title }}" 
+                         class="w-full h-auto object-cover rounded-xl shadow-md">
                 </div>
-                <p class="text-grey">Автор: {{ product.author }}</p>
-                <p class="product-description">{{ product.description }}</p>
-                {% if product.quantity > 0 %}
-                    <div class="alert alert-success text-center">В наличии</div>
-                {% else %}
-                    <div class="alert alert-danger text-center">Временно недоступен</div>
-                {% endif %}
-                <hr>
-               <div class="review">
-                    <span class="font-weight-bold text-grey">Средний рейтинг: {{ product.get_average_review_score }}/5.0</span>
-                    {% if user.is_authenticated and can_review and not has_reviewed %}
-                        <div class="mb-3 font-weight-bold">
-                            <a href="" class="custom-a" data-toggle="modal" data-target="#myModal">Оставить отзыв</a>
-                        </div>
-                    {% elif user.is_authenticated and not can_review %}
-                        <div class="mb-3">
-                            <br>
-                            <p> Вам необходимо приобрести и получить товар, чтобы оставить отзыв. </p>
-                        </div>
-                    {% elif user.is_authenticated and has_reviewed %}
-                        <div class="mb-3">
-                            <br>
-                            <p> Вы уже оставили отзыв на этот товар. </p>
-                        </div>
-                    {% else %}
-                        <div class="mb-3 font-weight-bold">
-                            <a href="{% url 'users:login' %}" class="custom-a">Войдите</a> в аккаунт, чтобы оставить отзыв.
-                        </div>
-                    {% endif %}
-                </div>
-                    <div class="mb-4">
-                    <form action="{% url 'cart:cart_add' product.id %}" method="post">
-                        {% csrf_token %}
-                        <span class="input-group add-to-cart shadow-custom">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text font-weight-bold px-3 price">₽{{ product.price }}</span>
-                            </div>
-                            {{ cart_product_form.quantity }}
-                            <div class="input-group-append">
-                                <button class="btn btn-primary px-4 reduce_padding" type="submit" data-toggle="tooltip" data-placement="top" title="Добавить в корзину">
-                                    <i class="fas fa-shopping-cart"></i>
-                                </button>
-                            </div>
-                        </span>
-                    </form>
-                </div>
-
             </div>
         </div>
-
-        <!-- Правая колонка для дополнительной информации, скрываем на маленьких экранах -->
-        <div class="col-lg-2 d-none d-lg-block">
-            <div class="info-box">
-                <h5 class="my-3">Самое важное</h5>
-                    <ul class="list-unstyled">
-                        <li><i class="custom-check bi bi-check-circle-fill"></i> Склады во многих городах России</li>
-                        <li><i class="custom-check bi bi-check-circle-fill"></i> Отправка 2-5 рабочих дней</li>
-                        <li><i class="custom-check bi bi-check-circle-fill"></i> «В наличии» — точно в наличии</li>
+        
+        <!-- Центральная колонка: Информация о книге -->
+        <div class="lg:col-span-5">
+            <div class="bg-white rounded-2xl shadow-lg p-6">
+                <!-- Теги/Бейджи (фильтры) -->
+                <div class="flex flex-wrap gap-2 mb-4">
+                    <a href="{{ product.id_category.get_absolute_url }}" 
+                       class="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200"
+                       style="background-color: rgba(252, 168, 144, 0.2); color: rgb(200, 100, 80);">
+                        <i class="bi bi-bookmark-fill mr-1.5"></i>
+                        {{ product.id_category.title }}
+                    </a>
+                    {% if product.quantity > 0 %}
+                    <span class="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-medium bg-green-100 text-green-700">
+                        <i class="bi bi-check-circle-fill mr-1.5"></i>
+                        В наличии
+                    </span>
+                    {% else %}
+                    <span class="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-medium bg-red-100 text-red-700">
+                        <i class="bi bi-x-circle-fill mr-1.5"></i>
+                        Нет в наличии
+                    </span>
+                    {% endif %}
+                    <!-- Рейтинг как бейдж -->
+                    <span class="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-medium bg-yellow-100 text-yellow-700">
+                        <i class="bi bi-star-fill mr-1.5"></i>
+                        {{ product.get_average_review_score }}/5
+                    </span>
+                </div>
+                
+                <!-- Заголовок: Название и автор -->
+                <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">
+                    {{ product.title }}
+                </h1>
+                <p class="text-lg text-gray-500 mb-6">
+                    <i class="bi bi-person-fill mr-1"></i>
+                    {{ product.author }}
+                </p>
+                
+                <!-- Описание -->
+                <div class="prose prose-gray max-w-none">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-3">
+                        <i class="bi bi-card-text mr-2"></i>Описание
+                    </h3>
+                    <p class="text-gray-600 leading-relaxed whitespace-pre-line">{{ product.description }}</p>
+                </div>
+                
+                <!-- Рейтинг и отзывы -->
+                <div class="mt-6 pt-6 border-t border-gray-200">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-2">
+                            <div class="flex">
+                                {% for i in "12345" %}
+                                    {% if forloop.counter <= product.get_average_review_score %}
+                                    <i class="bi bi-star-fill text-xl" style="color: rgb(253, 148, 118);"></i>
+                                    {% else %}
+                                    <i class="bi bi-star text-xl text-gray-300"></i>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <span class="text-gray-600 font-medium">{{ product.get_average_review_score }}/5</span>
+                            <span class="text-gray-400">({{ product.reviews.count }} отзывов)</span>
+                        </div>
+                        {% if user.is_authenticated and can_review and not has_reviewed %}
+                        <button class="px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:shadow-md"
+                                style="background-color: rgb(252, 168, 144); color: white;"
+                                onmouseover="this.style.backgroundColor='rgb(253, 148, 118)'"
+                                onmouseout="this.style.backgroundColor='rgb(252, 168, 144)'"
+                                data-toggle="modal" data-target="#myModal">
+                            <i class="bi bi-pencil-square mr-1"></i>
+                            Написать отзыв
+                        </button>
+                        {% endif %}
+                    </div>
+                    
+                    {% if user.is_authenticated and not can_review %}
+                    <p class="mt-3 text-sm text-gray-500 bg-gray-50 rounded-lg p-3">
+                        <i class="bi bi-info-circle mr-1"></i>
+                        Вам необходимо приобрести и получить товар, чтобы оставить отзыв.
+                    </p>
+                    {% elif user.is_authenticated and has_reviewed %}
+                    <p class="mt-3 text-sm text-green-600 bg-green-50 rounded-lg p-3">
+                        <i class="bi bi-check-circle mr-1"></i>
+                        Вы уже оставили отзыв на этот товар.
+                    </p>
+                    {% elif not user.is_authenticated %}
+                    <p class="mt-3 text-sm text-gray-500 bg-gray-50 rounded-lg p-3">
+                        <i class="bi bi-info-circle mr-1"></i>
+                        <a href="{% url 'users:login' %}" class="font-medium underline hover:no-underline" style="color: rgb(253, 148, 118);">Войдите</a> 
+                        в аккаунт, чтобы оставить отзыв.
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Правая колонка: Покупка и доставка -->
+        <div class="lg:col-span-3">
+            <div class="sticky top-24 space-y-4">
+                <!-- Блок покупки -->
+                <div class="bg-white rounded-2xl shadow-lg p-6">
+                    <!-- Цена со скидкой -->
+                    <div class="mb-4">
+                        <!-- 
+                        Варианты добавления промокодов:
+                        1. Модель PromoCode с полями: code, discount_percent, discount_amount, valid_from, valid_to, min_order_amount, max_uses
+                        2. Применение в корзине через форму ввода кода
+                        3. Автоматические скидки по условиям (первый заказ, сумма заказа и т.д.)
+                        4. Персональные скидки через связь с пользователем
+                        
+                        Сейчас используется фиксированная скидка 15% для демонстрации
+                        -->
+                        {% with discount_percent=15 %}
+                        {% widthratio product.price 100 discount_percent as discount_amount %}
+                        <div class="flex items-baseline gap-3 mb-2">
+                            <span class="text-3xl font-bold" style="color: rgb(253, 148, 118);">
+                                {{ product.price|floatformat:0 }} &#8381;
+                            </span>
+                            <span class="text-lg text-gray-400 line-through">
+                                {% widthratio product.price 85 100 as original_price %}
+                                {{ original_price }} &#8381;
+                            </span>
+                            <span class="px-2 py-0.5 text-sm font-medium rounded-md text-white" style="background-color: rgb(253, 148, 118);">
+                                -{{ discount_percent }}%
+                            </span>
+                        </div>
+                        {% endwith %}
+                        <p class="text-sm text-gray-500">
+                            <i class="bi bi-tag-fill mr-1"></i>
+                            Цена с учетом скидки
+                        </p>
+                    </div>
+                    
+                    <!-- Форма покупки -->
+                    <form action="{% url 'cart:cart_add' product.id %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="quantity" value="1">
+                        <!-- Кнопка купить -->
+                        <button type="submit" 
+                                class="w-full py-4 rounded-xl text-white font-bold text-lg shadow-lg transition-all duration-300 hover:shadow-xl active:scale-[0.98]"
+                                style="background-color: rgb(252, 168, 144);"
+                                onmouseover="this.style.backgroundColor='rgb(253, 148, 118)'"
+                                onmouseout="this.style.backgroundColor='rgb(252, 168, 144)'">
+                            <i class="bi bi-cart-plus mr-2"></i>
+                            В корзину
+                        </button>
+                    </form>
+                    
+                    <!-- Индикатор наличия -->
+                    {% if product.quantity > 0 %}
+                    <div class="mt-4 flex items-center text-green-600">
+                        <i class="bi bi-check-circle-fill text-xl mr-2"></i>
+                        <div>
+                            <p class="font-medium">В наличии</p>
+                            <p class="text-sm text-gray-500">{{ product.quantity }} шт. на складе</p>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="mt-4 flex items-center text-red-500">
+                        <i class="bi bi-x-circle-fill text-xl mr-2"></i>
+                        <div>
+                            <p class="font-medium">Временно недоступен</p>
+                            <p class="text-sm text-gray-500">Ожидается поступление</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Блок доставки -->
+                <div class="bg-white rounded-2xl shadow-lg p-6">
+                    <h3 class="font-semibold text-gray-800 mb-4 flex items-center">
+                        <i class="bi bi-truck mr-2" style="color: rgb(252, 168, 144);"></i>
+                        Доставка и оплата
+                    </h3>
+                    <ul class="space-y-3 text-sm text-gray-600">
+                        <li class="flex items-start">
+                            <i class="bi bi-check-circle-fill mr-2 mt-0.5 flex-shrink-0" style="color: rgb(252, 168, 144);"></i>
+                            <span>Склады во многих городах России</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="bi bi-check-circle-fill mr-2 mt-0.5 flex-shrink-0" style="color: rgb(252, 168, 144);"></i>
+                            <span>Отправка 2-5 рабочих дней</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="bi bi-check-circle-fill mr-2 mt-0.5 flex-shrink-0" style="color: rgb(252, 168, 144);"></i>
+                            <span>Курьером до двери</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="bi bi-check-circle-fill mr-2 mt-0.5 flex-shrink-0" style="color: rgb(252, 168, 144);"></i>
+                            <span>Оплата при получении</span>
+                        </li>
                     </ul>
-                    <h5 class="my-4">Оплата при получении</h5>
-                    <ul class="list-unstyled">
-                        <li><i class="custom-check bi bi-check-circle-fill"></i> Наличными</li>
-                        <li><i class="custom-check bi bi-check-circle-fill"></i> Картой</li>
-                        <li><i class="custom-check bi bi-check-circle-fill"></i> Перечислением</li>
-                    </ul>
-                    <h5 class="my-4">Доставка</h5>
-                    <ul class="list-unstyled">
-                        <li><i class="custom-check bi bi-check-circle-fill"></i> Курьером до двери</li>
-                    </ul>
+                </div>
             </div>
         </div>
     </div>
+    
     <!-- Секция отзывов -->
-    <div class="row mt-4">
-        <div class="col-12">
-           <h3 class="py-2">Отзывы:</h3>
-            {% for review in product.reviews.all %}
-                <span class="font-weight-bold py-2 text-grey">
-                    {% if review.id_user %}
-                        {{ review.id_user.name }} - {{ review.rating }}/5
-                    {% else %}
-                        Анонимный - {{ review.rating }}/5
-                    {% endif %}
+    <div class="mt-12">
+        <div class="bg-white rounded-2xl shadow-lg p-6">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                <i class="bi bi-chat-left-quote mr-3" style="color: rgb(252, 168, 144);"></i>
+                Отзывы покупателей
+                <span class="ml-3 px-3 py-1 text-sm font-medium rounded-full" style="background-color: rgba(252, 168, 144, 0.2); color: rgb(200, 100, 80);">
+                    {{ product.reviews.count }}
                 </span>
-                <span class="text-justify pb-2">{{ review.text }}</span>
-                <hr>
-            {% empty %}
-                <span class="pb-2">Пока нет отзывов</span>
-            {% endfor %}
+            </h2>
+            
+            {% if product.reviews.all %}
+            <div class="space-y-4">
+                {% for review in product.reviews.all %}
+                <div class="border border-gray-100 rounded-xl p-5 hover:shadow-md transition-shadow duration-200">
+                    <div class="flex items-start justify-between mb-3">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold mr-3"
+                                 style="background-color: rgb(252, 168, 144);">
+                                {% if review.id_user %}
+                                    {{ review.id_user.name|slice:":1"|upper }}
+                                {% else %}
+                                    A
+                                {% endif %}
+                            </div>
+                            <div>
+                                <p class="font-semibold text-gray-800">
+                                    {% if review.id_user %}
+                                        {{ review.id_user.name }}
+                                    {% else %}
+                                        Анонимный пользователь
+                                    {% endif %}
+                                </p>
+                                <p class="text-sm text-gray-400">{{ review.created_date|date:"d.m.Y" }}</p>
+                            </div>
+                        </div>
+                        <!-- Рейтинг отзыва -->
+                        <div class="flex items-center">
+                            {% for i in "12345" %}
+                                {% if forloop.counter <= review.rating %}
+                                <i class="bi bi-star-fill" style="color: rgb(253, 148, 118);"></i>
+                                {% else %}
+                                <i class="bi bi-star text-gray-300"></i>
+                                {% endif %}
+                            {% endfor %}
+                            <span class="ml-2 text-sm font-medium text-gray-600">{{ review.rating }}/5</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 leading-relaxed">{{ review.text }}</p>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="text-center py-12">
+                <i class="bi bi-chat-left-dots text-6xl text-gray-200 mb-4"></i>
+                <p class="text-gray-500 text-lg">Пока нет отзывов</p>
+                <p class="text-gray-400 text-sm mt-1">Будьте первым, кто оставит отзыв на этот товар!</p>
+            </div>
+            {% endif %}
         </div>
     </div>
 </div>
 
-<!-- Modal для отзывов -->
+<!-- Modal для отзывов (только если пользователь может оставить отзыв) -->
+{% if user.is_authenticated and can_review and not has_reviewed %}
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="reviewModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="reviewModalLabel">Оставьте свой отзыв</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content rounded-2xl overflow-hidden border-0 shadow-xl">
+            <div class="modal-header border-0 pb-0" style="background: linear-gradient(135deg, rgb(252, 168, 144), rgb(253, 148, 118));">
+                <h5 class="modal-title text-white font-bold text-xl" id="reviewModalLabel">
+                    <i class="bi bi-pencil-square mr-2"></i>
+                    Оставьте свой отзыв
+                </h5>
+                <button type="button" class="close text-white opacity-100" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="text-2xl">&times;</span>
                 </button>
             </div>
             <form method="post">
                 {% csrf_token %}
-                <div class="modal-body">
-                    <div class="bg-grey">
-                        <div class="text-center pt-2">
-                            Рейтинг:
-                            <div id="full-stars" class="d-inline text-center">
-                                <div class="rating-group">
-                                    <label class="rating__label" for="id_rating_0">
-                                        <i class="rating__icon rating__icon--star fa fa-star">1</i>
-                                    </label>
-                                    <input class="rating__input" name="rating" id="id_rating_0" value="1" type="radio" required>
-                                    <label class="rating__label" for="id_rating_1">
-                                        <i class="rating__icon rating__icon--star fa fa-star">2</i>
-                                    </label>
-                                    <input class="rating__input" name="rating" id="id_rating_1" value="2" type="radio" required>
-                                    <label class="rating__label" for="id_rating_2">
-                                        <i class="rating__icon rating__icon--star fa fa-star">3</i>
-                                    </label>
-                                    <input class="rating__input" name="rating" id="id_rating_2" value="3" type="radio" required>
-                                    <label class="rating__label" for="id_rating_3">
-                                        <i class="rating__icon rating__icon--star fa fa-star">4</i>
-                                    </label>
-                                    <input class="rating__input" name="rating" id="id_rating_3" value="4" type="radio" required>
-                                    <label class="rating__label" for="id_rating_4">
-                                        <i class="rating__icon rating__icon--star fa fa-star">5</i>
-                                    </label>
-                                    <input class="rating__input" name="rating" checked id="id_rating_4" value="5" type="radio" required>
-                                </div>
+                <div class="modal-body p-6">
+                    <div class="bg-gray-50 rounded-xl p-4 mb-4">
+                        <p class="text-center text-gray-600 mb-3">Выберите рейтинг:</p>
+                        <div class="flex justify-center space-x-2">
+                            <div id="full-stars" class="rating-group flex items-center space-x-1">
+                                {% for i in "12345" %}
+                                <label class="cursor-pointer" for="id_rating_{{ forloop.counter0 }}">
+                                    <i class="bi bi-star text-3xl text-gray-300 hover:text-yellow-400 transition-colors rating-star" data-rating="{{ forloop.counter }}"></i>
+                                </label>
+                                <input class="hidden" name="rating" id="id_rating_{{ forloop.counter0 }}" value="{{ forloop.counter }}" type="radio" {% if forloop.counter == 5 %}checked{% endif %} required>
+                                {% endfor %}
                             </div>
                         </div>
-                        <hr class="m-0">
-                        <div class="input-field text-center p-2">
-                            {{ review_form.text }}
-                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-2">Ваш отзыв:</label>
+                        <textarea name="text" rows="4" 
+                                  class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-transparent focus:ring-2 focus:outline-none resize-none transition-all"
+                                  style="--tw-ring-color: rgb(252, 168, 144);"
+                                  placeholder="Поделитесь своими впечатлениями о товаре..."></textarea>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button class="btn btn-primary" type="submit">Подтвердить</button>
+                <div class="modal-footer border-0 pt-0 px-6 pb-6">
+                    <button type="button" class="px-6 py-2.5 rounded-xl border border-gray-300 text-gray-600 font-medium hover:bg-gray-50 transition-colors" data-dismiss="modal">
+                        Отмена
+                    </button>
+                    <button class="px-6 py-2.5 rounded-xl text-white font-medium transition-all duration-200 hover:shadow-md" 
+                            type="submit"
+                            style="background-color: rgb(252, 168, 144);"
+                            onmouseover="this.style.backgroundColor='rgb(253, 148, 118)'"
+                            onmouseout="this.style.backgroundColor='rgb(252, 168, 144)'">
+                        <i class="bi bi-send mr-1"></i>
+                        Отправить отзыв
+                    </button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+{% endif %}
+
+{% if user.is_authenticated and can_review and not has_reviewed %}
+<script>
+// Интерактивный рейтинг в модальном окне
+document.addEventListener('DOMContentLoaded', function() {
+    const stars = document.querySelectorAll('.rating-star');
+    const inputs = document.querySelectorAll('input[name="rating"]');
+    
+    if (stars.length === 0) return;
+    
+    function updateStars(rating) {
+        stars.forEach((star, index) => {
+            if (index < rating) {
+                star.classList.remove('bi-star', 'text-gray-300');
+                star.classList.add('bi-star-fill');
+                star.style.color = 'rgb(253, 148, 118)';
+            } else {
+                star.classList.remove('bi-star-fill');
+                star.classList.add('bi-star', 'text-gray-300');
+                star.style.color = '';
+            }
+        });
+    }
+    
+    // Установить начальный рейтинг (5 звезд)
+    updateStars(5);
+    
+    stars.forEach((star, index) => {
+        star.addEventListener('click', function() {
+            const rating = index + 1;
+            inputs[index].checked = true;
+            updateStars(rating);
+        });
+        
+        star.addEventListener('mouseover', function() {
+            updateStars(index + 1);
+        });
+    });
+    
+    const ratingGroup = document.querySelector('.rating-group');
+    if (ratingGroup) {
+        ratingGroup.addEventListener('mouseleave', function() {
+            const checkedInput = document.querySelector('input[name="rating"]:checked');
+            if (checkedInput) {
+                updateStars(parseInt(checkedInput.value));
+            }
+        });
+    }
+});
+</script>
+{% endif %}
+
+<style>
+/* Стили для поля количества */
+input[type="number"],
+select.form-control,
+input.form-control {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    text-align: center;
+    background: white;
+}
+
+input[type="number"]:focus,
+select.form-control:focus,
+input.form-control:focus {
+    outline: none;
+    border-color: rgb(252, 168, 144);
+    box-shadow: 0 0 0 3px rgba(252, 168, 144, 0.2);
+}
+
+/* Bootstrap modal overrides для соответствия новой цветовой схеме */
+.modal-content {
+    border: none;
+}
+
+.close:hover {
+    opacity: 0.8;
+}
+</style>
 
 {% endblock %}

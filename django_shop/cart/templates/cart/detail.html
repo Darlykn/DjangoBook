@@ -3,116 +3,357 @@
 {% block title %}Корзина{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-     <h3 class="py-2 text-grey">
-        Корзина
-    </h3>
-    <div class="mb-4 p-3 border rounded">
-        {% for item in cart %}
-            {% with product=item.product %}
-            <div class="row mb-2 align-items-center">
-                <div class="col-6 col-sm-6 col-md-3 col-lg-2">
-                    <img src="{{ product.image.url }}" alt="{{ op.id_product.title }}" class="img-fluid rounded product-image" style="min-height: 200px;">
-                </div>
-                <div class="cart-item col-6 col-sm-6 col-md-9 col-lg-10">
-                    <div>
-                    <a href="{{ product.get_absolute_url }}" class="text-dark font-weight-bold mt-3"
-                       style="text-decoration: none;">{{ product.title }}</a>
-                    </div>
-                    <p class="mt-3">Цена: {{ product.price }} ₽</p>
-                    {% if product.quantity > 0 %}
-                        <p class="text-success">Доступен</p>
-                    {% else %}
-                        <p class="text-danger">Недоступен</p>
-                    {% endif %}
-                  <p>Количество:</p>
-                    <form action="{% url 'cart:cart_add' product.id %}" method="post" class="update-cart-form">
-                        {% csrf_token %}
-                        <div class="input-group input-group-sm shopping-cart" style="min-width: 140px;">
-                            {{ item.update_quantity_form.quantity }}
-                            <div class="mt-3">
-                            <input type="hidden" name="overwrite_qty" value="True">
-                            </div>
-                            <div class="input-group-append">
-                                <button type="submit" class="btn btn-outline-custom" data-toggle="tooltip" data-placement="top" title="Обновить">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button type="submit" formaction="{% url 'cart:cart_remove' product.id %}" class="btn btn-outline-custom ml-1" data-toggle="tooltip" data-placement="top" title="Удалить">
-                                    <i class="fas fa-trash-alt"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            {% endwith %}
-        {% empty %}
-         <div class="align-self-center">
-            <span class="text-center font-weight-bold text-muted lead">
-                Ваша корзина пуста.
-            </span>
-        </div>
-        {% endfor %}
-        <div class="total-price-cart">
-           <h5 class="row justify-content-center">
-                <div class="mt-3">
-                    Итоговая цена:&nbsp;<span class="text-success total-cart-price">{{ cart_total_price|floatformat:2 }} ₽</span>
-                </div>
-            </h5>
-        </div>
-    </div>
-     <hr>
-    <div class="col-lg-10 mx-auto mb-5">
-        <div class="row justify-content-end">
-            {% if cart|length == 0 %}
-            <div class="col-lg-4 px-0">
-                <div class="btn-group d-flex">
-                    <a href="{% url 'shop:product_list' %}" class="btn btn-primary shadow-custom col">
-                        Вернуться назад
-                    </a>
-                </div>
-            </div>
-            {% elif cart|length > 0 and all_products_available %}
-                {% if user.is_authenticated %}
-                    <div class="col-lg-6 px-0">
-                        <div class="btn-group d-flex">
-                            <a href="{% url 'shop:product_list' %}" class="btn btn-outline-custom2 shadow-custom col">
-                                Вернуться назад
-                            </a>
-                            <a href="{% url 'orders:order_create' %}" class="btn btn-primary shadow-custom col">
-                                Оформить заказ
-                            </a>
-                        </div>
-                    </div>
-                {% else %}
-                    <div class="col-lg-4 px-0">
-                        <div class="btn-group d-flex">
-                            <a href="{% url 'shop:product_list' %}" class="btn btn-primary shadow-custom col">
-                                Вернуться назад
-                            </a>
-                        </div>
-                        <span class="col align-items-center justify-content-center">
-                            Для заказа <a href="{% url 'users:login' %}" class="custom-a ml-1">войдите в аккаунт</a>.
-                        </span>
-                    </div>
-                {% endif %}
-            {% elif not all_products_available%}
-                <div class="col-lg-4 px-0">
-                    <div class="btn-group d-flex">
-                        <a href="{% url 'shop:product_list' %}" class="btn btn-primary shadow-custom col">
-                            Вернуться назад
-                        </a>
-                    </div>
-                    <span class="col d-flex align-items-center justify-content-center">
-                        Извините, некоторые товары недоступны.
-                    </span>
-                </div>
+<style>
+    @media (min-width: 1024px) {
+        .cart-container {
+            display: flex;
+            flex-direction: row;
+            gap: 1.5rem;
+        }
+        .cart-left {
+            flex-grow: 1;
+            width: 66.666667%;
+        }
+        .cart-right {
+            width: 33.333333%;
+        }
+    }
+    @media (max-width: 1023px) {
+        .cart-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+    }
+</style>
+<div class="max-w-6xl mx-auto">
+    <!-- Заголовок -->
+    <div class="mb-6">
+        <h1 class="text-2xl md:text-3xl font-bold text-gray-800 flex items-center">
+            <i class="bi bi-bag-heart mr-3" style="color: rgb(252, 168, 144);"></i>
+            Корзина
+            {% if cart %}
+            <span class="ml-3 text-lg font-normal text-gray-400">({{ cart|length }} товаров)</span>
             {% endif %}
+        </h1>
+    </div>
+
+    {% if cart %}
+    <div class="cart-container">
+        <!-- Левая колонка: Список товаров -->
+        <div class="cart-left">
+            <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                {% for item in cart %}
+                {% with product=item.product %}
+                <div class="p-4 md:p-5 {% if not forloop.last %}border-b border-gray-100{% endif %}">
+                    <div class="flex gap-4">
+                        <!-- Миниатюра обложки -->
+                        <a href="{{ product.get_absolute_url }}" class="flex-shrink-0">
+                            <div style="width: 60px; height: 90px; overflow: hidden; border-radius: 0.5rem; background-color: #f3f4f6; display: flex; align-items: center; justify-content: center;" class="shadow-sm">
+                                <img src="{{ product.image.url }}" 
+                                     alt="{{ product.title }}" 
+                                     style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                            </div>
+                        </a>
+                        
+                        <!-- Информация о товаре -->
+                        <div class="flex-grow min-w-0">
+                            <div class="flex flex-col h-full">
+                                <!-- Название и автор -->
+                                <div class="mb-2">
+                                    <a href="{{ product.get_absolute_url }}" 
+                                       class="text-base md:text-lg font-semibold text-gray-800 hover:underline line-clamp-2">
+                                        {{ product.title }}
+                                    </a>
+                                    <p class="text-sm text-gray-500 mt-0.5">{{ product.author }}</p>
+                                </div>
+                                
+                                <!-- Нижняя часть: цена, количество, действия -->
+                                <div class="mt-auto flex flex-wrap items-end justify-between gap-3">
+                                    <!-- Блок цены и наличия -->
+                                    <div>
+                                        <!-- Цена -->
+                                        <div class="flex items-baseline gap-2">
+                                            <span class="text-xl md:text-2xl font-bold" style="color: rgb(253, 148, 118);">
+                                                {{ item.total_price|floatformat:0 }} &#8381;
+                                            </span>
+                                            {% if item.quantity > 1 %}
+                                            <span class="text-sm text-gray-400 line-through">
+                                                {% widthratio item.total_price 85 100 as original_total %}
+                                                {{ original_total }} &#8381;
+                                            </span>
+                                            {% else %}
+                                            <span class="text-sm text-gray-400 line-through">
+                                                {% widthratio product.price 85 100 as original_price %}
+                                                {{ original_price }} &#8381;
+                                            </span>
+                                            {% endif %}
+                                        </div>
+                                        <!-- Наличие -->
+                                        {% if product.quantity > 0 %}
+                                        <p class="text-xs text-green-600 mt-1">
+                                            <i class="bi bi-check-circle-fill mr-1"></i>
+                                            В наличии {{ product.quantity }} шт.
+                                        </p>
+                                        {% else %}
+                                        <p class="text-xs text-red-500 mt-1">
+                                            <i class="bi bi-x-circle-fill mr-1"></i>
+                                            Нет в наличии
+                                        </p>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <!-- Управление количеством и удаление -->
+                                    <div class="flex items-center gap-3">
+                                        <!-- Кнопки количества -->
+                                        <form action="{% url 'cart:cart_add' product.id %}" method="post" class="quantity-form">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="overwrite_qty" value="True">
+                                            <div class="flex items-center border border-gray-200 rounded-lg overflow-hidden bg-gray-50">
+                                                <button type="submit" 
+                                                        name="quantity" 
+                                                        value="{{ item.quantity|add:-1 }}"
+                                                        class="w-9 h-9 flex items-center justify-center text-gray-500 hover:bg-gray-200 transition-colors {% if item.quantity <= 1 %}opacity-50 cursor-not-allowed{% endif %}"
+                                                        {% if item.quantity <= 1 %}disabled{% endif %}>
+                                                    <i class="bi bi-dash text-lg"></i>
+                                                </button>
+                                                <span class="w-10 h-9 flex items-center justify-center font-semibold text-gray-800 bg-white border-x border-gray-200">
+                                                    {{ item.quantity }}
+                                                </span>
+                                                <button type="submit" 
+                                                        name="quantity" 
+                                                        value="{{ item.quantity|add:1 }}"
+                                                        class="w-9 h-9 flex items-center justify-center text-gray-500 hover:bg-gray-200 transition-colors">
+                                                    <i class="bi bi-plus text-lg"></i>
+                                                </button>
+                                            </div>
+                                        </form>
+                                        
+                                        <!-- Удалить -->
+                                        <form action="{% url 'cart:cart_remove' product.id %}" method="post">
+                                            {% csrf_token %}
+                                            <button type="submit" 
+                                                    class="w-9 h-9 flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                                                    title="Удалить">
+                                                <i class="bi bi-trash text-lg"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endwith %}
+                {% endfor %}
+            </div>
+            
+            <!-- Ссылка продолжить покупки -->
+            <a href="{% url 'shop:product_list' %}" 
+               class="inline-flex items-center mt-4 text-gray-500 hover:text-gray-700 transition-colors">
+                <i class="bi bi-arrow-left mr-2"></i>
+                Продолжить покупки
+            </a>
+        </div>
+        
+        <!-- Правая колонка: Оформление и итоги -->
+        <div class="cart-right">
+            <div style="position: sticky; top: 6rem;">
+                <div class="bg-white rounded-2xl shadow-lg p-5">
+                    <!-- Промокод -->
+                    <div class="mb-5">
+                        <p class="text-sm font-medium text-gray-700 mb-2">Промокод</p>
+                        <form id="promo-form" class="flex gap-2">
+                            <input type="text" 
+                                   name="promo_code" 
+                                   id="promo-input"
+                                   placeholder="Введите промокод"
+                                   class="flex-grow px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-transparent focus:ring-2 transition-all"
+                                   style="--tw-ring-color: rgb(252, 168, 144);">
+                            <button type="submit" 
+                                    class="px-4 py-2.5 text-sm font-medium rounded-lg border-2 transition-all duration-200"
+                                    style="border-color: rgb(252, 168, 144); color: rgb(253, 148, 118);"
+                                    onmouseover="this.style.backgroundColor='rgb(252, 168, 144)'; this.style.color='white';"
+                                    onmouseout="this.style.backgroundColor='transparent'; this.style.color='rgb(253, 148, 118)';">
+                                Применить
+                            </button>
+                        </form>
+                        <!-- Сообщение об ошибке/успехе промокода -->
+                        <p id="promo-message" class="hidden text-xs mt-2"></p>
+                    </div>
+                    
+                    <div class="border-t border-gray-100 pt-4">
+                        <!-- Сводка заказа -->
+                        <div class="space-y-3 text-sm">
+                            <div class="flex justify-between text-gray-600">
+                                <span>Товаров ({{ cart|length }}):</span>
+                                <span>{{ cart_total_price|floatformat:0 }} &#8381;</span>
+                            </div>
+                            
+                            <!-- Скидка (демо - 15%) -->
+                            {% widthratio cart_total_price 100 15 as discount_amount %}
+                            <div class="flex justify-between text-green-600">
+                                <span>Скидка 15%:</span>
+                                <span>-{{ discount_amount }} &#8381;</span>
+                            </div>
+                            
+                            <!-- Промокод скидка (скрыта по умолчанию) -->
+                            <div id="promo-discount-row" class="hidden flex justify-between text-green-600">
+                                <span>Промокод:</span>
+                                <span id="promo-discount-value">-0 &#8381;</span>
+                            </div>
+                            
+                            <div class="flex justify-between text-gray-600">
+                                <span>Доставка:</span>
+                                <span class="text-green-600">Бесплатно</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Итого -->
+                        <div class="border-t border-gray-100 mt-4 pt-4">
+                            <div class="flex justify-between items-center">
+                                <span class="text-lg font-semibold text-gray-800">Итого:</span>
+                                <span class="text-2xl font-bold" style="color: rgb(253, 148, 118);">
+                                    {% widthratio cart_total_price 100 85 as final_price %}
+                                    {{ final_price }} &#8381;
+                                </span>
+                            </div>
+                            <p class="text-xs text-gray-400 mt-1 text-right">с учетом скидки</p>
+                        </div>
+                        
+                        <!-- Кнопка оформления -->
+                        <div class="mt-5">
+                            {% if all_products_available %}
+                                {% if user.is_authenticated %}
+                                <a href="{% url 'orders:order_create' %}" 
+                                   class="block w-full py-4 rounded-xl text-white font-bold text-center text-lg shadow-lg transition-all duration-300 hover:shadow-xl active:scale-[0.98]"
+                                   style="background-color: rgb(252, 168, 144);"
+                                   onmouseover="this.style.backgroundColor='rgb(253, 148, 118)'"
+                                   onmouseout="this.style.backgroundColor='rgb(252, 168, 144)'">
+                                    Перейти к оформлению
+                                </a>
+                                {% else %}
+                                <a href="{% url 'users:login' %}" 
+                                   class="block w-full py-4 rounded-xl text-white font-bold text-center text-lg shadow-lg transition-all duration-300 hover:shadow-xl active:scale-[0.98]"
+                                   style="background-color: rgb(252, 168, 144);"
+                                   onmouseover="this.style.backgroundColor='rgb(253, 148, 118)'"
+                                   onmouseout="this.style.backgroundColor='rgb(252, 168, 144)'">
+                                    Войти для оформления
+                                </a>
+                                <p class="text-xs text-gray-500 text-center mt-2">
+                                    Для оформления заказа необходимо войти в аккаунт
+                                </p>
+                                {% endif %}
+                            {% else %}
+                            <button disabled 
+                                    class="block w-full py-4 rounded-xl text-white font-bold text-center text-lg bg-gray-300 cursor-not-allowed">
+                                Перейти к оформлению
+                            </button>
+                            <p class="text-xs text-red-500 text-center mt-2">
+                                <i class="bi bi-exclamation-triangle mr-1"></i>
+                                Некоторые товары недоступны
+                            </p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Гарантии под блоком оформления -->
+                <div class="mt-4 bg-white rounded-2xl shadow-lg p-5">
+                    <ul class="space-y-2.5 text-sm text-gray-600">
+                        <li class="flex items-center">
+                            <i class="bi bi-shield-check mr-3 text-lg" style="color: rgb(252, 168, 144);"></i>
+                            <span>Безопасная оплата</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="bi bi-truck mr-3 text-lg" style="color: rgb(252, 168, 144);"></i>
+                            <span>Бесплатная доставка</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="bi bi-arrow-counterclockwise mr-3 text-lg" style="color: rgb(252, 168, 144);"></i>
+                            <span>Возврат 14 дней</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
+    
+    {% else %}
+    <!-- Пустая корзина -->
+    <div class="bg-white rounded-2xl shadow-lg p-12 text-center max-w-lg mx-auto">
+        <div class="mb-6">
+            <i class="bi bi-bag-x text-8xl text-gray-200"></i>
+        </div>
+        <h2 class="text-2xl font-bold text-gray-800 mb-2">Корзина пуста</h2>
+        <p class="text-gray-500 mb-6">Добавьте товары, чтобы оформить заказ</p>
+        <a href="{% url 'shop:product_list' %}" 
+           class="inline-block px-8 py-4 rounded-xl text-white font-bold text-lg shadow-lg transition-all duration-300 hover:shadow-xl active:scale-[0.98]"
+           style="background-color: rgb(252, 168, 144);"
+           onmouseover="this.style.backgroundColor='rgb(253, 148, 118)'"
+           onmouseout="this.style.backgroundColor='rgb(252, 168, 144)'">
+            <i class="bi bi-book mr-2"></i>
+            Перейти к каталогу
+        </a>
+    </div>
+    {% endif %}
 </div>
+
+<script>
+// Обработка промокода (демо)
+document.addEventListener('DOMContentLoaded', function() {
+    const promoForm = document.getElementById('promo-form');
+    const promoInput = document.getElementById('promo-input');
+    const promoMessage = document.getElementById('promo-message');
+    const promoDiscountRow = document.getElementById('promo-discount-row');
+    const promoDiscountValue = document.getElementById('promo-discount-value');
+    
+    if (!promoForm) return;
+    
+    // Демо промокоды
+    const validPromoCodes = {
+        'DARLY10': 10,
+        'BOOK20': 20,
+        'SALE15': 15
+    };
+    
+    promoForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const code = promoInput.value.trim().toUpperCase();
+        
+        if (!code) {
+            showMessage('Введите промокод', 'error');
+            return;
+        }
+        
+        if (validPromoCodes[code]) {
+            const discount = validPromoCodes[code];
+            showMessage('Промокод применен! Скидка ' + discount + '%', 'success');
+            
+            // Показать строку скидки
+            if (promoDiscountRow) {
+                promoDiscountRow.classList.remove('hidden');
+                promoDiscountRow.classList.add('flex');
+                // Расчет скидки (демо)
+                const total = {{ cart_total_price|default:0 }};
+                const discountAmount = Math.round(total * discount / 100);
+                promoDiscountValue.textContent = '-' + discountAmount + ' \u20BD';
+            }
+        } else {
+            showMessage('Недействительный промокод', 'error');
+            if (promoDiscountRow) {
+                promoDiscountRow.classList.add('hidden');
+                promoDiscountRow.classList.remove('flex');
+            }
+        }
+    });
+    
+    function showMessage(text, type) {
+        promoMessage.textContent = text;
+        promoMessage.classList.remove('hidden', 'text-green-600', 'text-red-500');
+        promoMessage.classList.add(type === 'success' ? 'text-green-600' : 'text-red-500');
+    }
+});
+</script>
 {% endblock content %}
-
-
-
-

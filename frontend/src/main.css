@@ -3,5 +3,60 @@
 /* Сканировать Django шаблоны для генерации классов */
 @source "../../django_shop/shop/templates/**/*.html";
 
-/* Здесь позже можно добавить свои глобальные стили для DARLY */
+/* DARLY Global Color Scheme Styles */
+/* Primary: rgb(252, 168, 144) - #fca890 */
+/* Accent/Hover: rgb(253, 148, 118) - #fd9476 */
+
+:root {
+    --darly-primary: rgb(252, 168, 144);
+    --darly-accent: rgb(253, 148, 118);
+    --darly-primary-light: rgba(252, 168, 144, 0.2);
+    --darly-primary-dark: rgb(200, 100, 80);
+}
+
+/* Card hover effects */
+.product-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(252, 168, 144, 0.15);
+}
+
+/* Custom scrollbar for webkit browsers */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgb(252, 168, 144);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgb(253, 148, 118);
+}
+
+/* Selection color */
+::selection {
+    background-color: rgba(252, 168, 144, 0.3);
+    color: inherit;
+}
+
+/* Focus ring color override */
+*:focus {
+    outline-color: rgb(252, 168, 144);
+}
+
+/* Smooth scroll behavior */
+html {
+    scroll-behavior: smooth;
+}
 
