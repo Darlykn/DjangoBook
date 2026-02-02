@@ -1,6 +1,7 @@
 {% extends 'shop/base.html' %}
 {% load static %}
 {% block title %}Корзина{% endblock %}
+{% block header %}{% endblock %}
 
 {% block content %}
 <div>
@@ -300,7 +301,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 promoDiscountRow.classList.remove('hidden');
                 promoDiscountRow.classList.add('flex');
                 // Расчет скидки (демо)
-                const total = {{ cart_total_price|default:0 }};
+                const total = parseFloat('{{ cart_total_price|default:0 }}'.replace(',', '.')) || 0;
                 const discountAmount = Math.round(total * discount / 100);
                 promoDiscountValue.textContent = '-' + discountAmount + ' \u20BD';
             }

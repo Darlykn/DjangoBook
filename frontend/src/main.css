@@ -157,6 +157,11 @@
     box-shadow: 0 12px 24px rgba(141, 170, 166, 0.15);
 }
 
+/* Product title hover effect */
+.group:hover .group-hover-title {
+    color: rgb(235, 122, 91);
+}
+
 /* =============================================
    Component Styles - Badges & Tags
    ============================================= */
