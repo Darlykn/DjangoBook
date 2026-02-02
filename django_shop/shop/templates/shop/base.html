@@ -21,42 +21,47 @@
     {% block mainmenu %}
     <nav class="bg-white shadow-md fixed top-0 left-0 right-0 z-50">
         <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <!-- Logo -->
-                <a href="{% url 'shop:product_list' %}" class="flex-shrink-0">
-                    <img src="{% static 'shop/img/logo4.png' %}" alt="Logo" class="h-12 w-auto">
-                </a>
+            <div class="relative flex items-center justify-between h-16 gap-4">
+                <!-- Left side: Logo + Navigation -->
+                <div class="flex items-center gap-6 lg:gap-8 z-10">
+                    <!-- Logo -->
+                    <a href="{% url 'shop:product_list' %}" class="flex-shrink-0">
+                        <img src="{% static 'shop/img/logo4.png' %}" alt="Logo" class="h-12 w-auto">
+                    </a>
 
-                <!-- Desktop Navigation -->
-                <div class="hidden md:flex items-center space-x-3 lg:space-x-4">
-                    <!-- Каталог с категориями dropdown -->
-                    <div class="relative group">
-                        <button class="px-4 py-2 text-white rounded-lg transition-colors flex items-center gap-1 btn-primary">
-                            Каталог
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                            </svg>
-                        </button>
-                        <div class="absolute left-0 mt-2 w-52 bg-white rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                            <div class="py-1">
-                                <a href="/" class="block px-4 py-2 text-sm text-gray-700 dropdown-item-hover font-medium">
-                                    <i class="bi bi-grid mr-2"></i>Все категории
-                                </a>
-                                <div class="border-t my-1"></div>
-                                {% for c in categories %}
-                                <a href="{{ c.get_absolute_url }}" class="block px-4 py-2 text-sm text-gray-700 dropdown-item-hover">{{ c.title }}</a>
-                                {% endfor %}
+                    <!-- Desktop Navigation -->
+                    <div class="hidden lg:flex items-center gap-3">
+                        <!-- Каталог с категориями dropdown -->
+                        <div class="relative group">
+                            <button class="px-4 py-2 text-white rounded-lg transition-colors flex items-center gap-1 btn-primary">
+                                Каталог
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                </svg>
+                            </button>
+                            <div class="absolute left-0 mt-2 w-52 bg-white rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                                <div class="py-1">
+                                    <a href="/" class="block px-4 py-2 text-sm text-gray-700 dropdown-item-hover font-medium">
+                                        <i class="bi bi-grid mr-2"></i>Все категории
+                                    </a>
+                                    <div class="border-t my-1"></div>
+                                    {% for c in categories %}
+                                    <a href="{{ c.get_absolute_url }}" class="block px-4 py-2 text-sm text-gray-700 dropdown-item-hover">{{ c.title }}</a>
+                                    {% endfor %}
+                                </div>
                             </div>
                         </div>
+                        
+                        <a href="{% url 'shop:about' %}" class="text-gray-700 font-medium transition-colors nav-link-hover whitespace-nowrap">О нас</a>
                     </div>
-                    
-                    <a href="{% url 'shop:about' %}" class="text-gray-700 font-medium transition-colors nav-link-hover whitespace-nowrap">О нас</a>
-                    
-                    <!-- Поиск -->
+                </div>
+
+                <!-- Center: Search (Absolute positioning for true center) -->
+                <div class="hidden lg:flex absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2">
                     <form method="get" action="/" class="flex items-center">
                         <div class="relative">
                             <input type="search" name="q" placeholder="Поиск по книгам, авторам..." 
-                                   class="w-80 lg:w-96 pl-4 pr-10 py-2 border border-gray-300 rounded-full text-sm focus:outline-none focus:ring-2 focus:border-transparent search-input">
+                                   class="w-80 xl:w-[450px] pl-4 pr-10 py-2 border border-gray-300 rounded-full text-sm focus:outline-none focus:ring-2 focus:border-transparent search-input">
                             <button type="submit" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 search-btn-hover">
                                 <i class="bi bi-search"></i>
                             </button>
@@ -64,48 +69,49 @@
                     </form>
                 </div>
 
-                <!-- Right side -->
-                <div class="hidden md:flex items-center space-x-4">
-                    {% if request.user.is_authenticated %}
-                        <!-- Профиль с выпадающим меню -->
-                        <div class="relative group">
-                            <button class="flex items-center gap-2 px-4 py-2 rounded-full bg-darly-light hover:bg-opacity-80 transition-all">
-                                <div class="w-7 h-7 rounded-full flex items-center justify-center text-white font-semibold text-sm bg-darly-primary">
-                                    {{ user.name|slice:":1"|upper }}
-                                </div>
-                                <span class="font-medium text-darly-dark">{{ user.name }}</span>
-                                <svg class="w-4 h-4 text-darly-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                                </svg>
-                            </button>
-                            <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                                <div class="py-1">
-                                    <a href="{% url 'orders:my-orders' %}" class="block px-4 py-2 text-sm text-gray-700 dropdown-item-hover">
-                                        <i class="bi bi-box-seam mr-2"></i>Мои заказы
-                                    </a>
-                                    {% if user.is_staff %}
-                                    <a href="/admin/" class="block px-4 py-2 text-sm text-gray-700 dropdown-item-hover">
-                                        <i class="bi bi-gear mr-2"></i>Администрирование
-                                    </a>
-                                    {% endif %}
-                                    <div class="border-t my-1"></div>
-                                    <a href="{% url 'users:logout' %}" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50">
-                                        <i class="bi bi-box-arrow-right mr-2"></i>Выйти
-                                    </a>
+                <!-- Right side: Profile -->
+                <div class="hidden lg:flex items-center gap-4 z-10">
+                        {% if request.user.is_authenticated %}
+                            <!-- Профиль с выпадающим меню -->
+                            <div class="relative group">
+                                <button class="flex items-center gap-2 px-4 py-2 rounded-full bg-darly-light hover:bg-opacity-80 transition-all">
+                                    <div class="w-7 h-7 rounded-full flex items-center justify-center text-white font-semibold text-sm bg-darly-primary">
+                                        {{ user.name|slice:":1"|upper }}
+                                    </div>
+                                    <span class="font-medium text-darly-dark">{{ user.name }}</span>
+                                    <svg class="w-4 h-4 text-darly-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                    </svg>
+                                </button>
+                                <div class="absolute left-1/2 -translate-x-1/2 mt-2 w-48 bg-white rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                                    <div class="py-1">
+                                        <a href="{% url 'orders:my-orders' %}" class="block px-4 py-2 text-sm text-gray-700 dropdown-item-hover">
+                                            <i class="bi bi-box-seam mr-2"></i>Мои заказы
+                                        </a>
+                                        {% if user.is_staff %}
+                                        <a href="/admin/" class="block px-4 py-2 text-sm text-gray-700 dropdown-item-hover">
+                                            <i class="bi bi-gear mr-2"></i>Администрирование
+                                        </a>
+                                        {% endif %}
+                                        <div class="border-t my-1"></div>
+                                        <a href="{% url 'users:logout' %}" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                                            <i class="bi bi-box-arrow-right mr-2"></i>Выйти
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    {% else %}
-                        <a href="{% url 'users:login' %}" class="px-4 py-2 text-white rounded-lg transition-colors btn-primary">Войти</a>
-                    {% endif %}
-                    
-                    <a href="{% url 'cart:cart_detail' %}" class="text-gray-600 transition-colors nav-link-hover" title="Корзина">
-                        <i class="bi bi-bag-heart text-2xl"></i>
-                    </a>
+                        {% else %}
+                            <a href="{% url 'users:login' %}" class="px-4 py-2 text-white rounded-lg transition-colors btn-primary">Войти</a>
+                        {% endif %}
+                        
+                        <a href="{% url 'cart:cart_detail' %}" class="text-gray-600 transition-colors nav-link-hover" title="Корзина">
+                            <i class="bi bi-bag-heart text-2xl"></i>
+                        </a>
+                    </div>
                 </div>
 
                 <!-- Mobile menu button -->
-                <div class="md:hidden flex items-center space-x-3">
+                <div class="lg:hidden flex items-center space-x-3">
                     <a href="{% url 'cart:cart_detail' %}" class="text-gray-600 nav-link-hover">
                         <i class="bi bi-bag-heart text-xl"></i>
                     </a>
@@ -119,7 +125,7 @@
         </div>
 
         <!-- Mobile menu -->
-        <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
+        <div id="mobile-menu" class="hidden lg:hidden bg-white border-t">
             <div class="px-4 py-3 space-y-3">
                 <!-- Каталог и категории -->
                 <div class="border-b pb-3">

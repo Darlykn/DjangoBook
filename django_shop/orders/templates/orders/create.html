@@ -6,43 +6,112 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container">
-        {% if messages %}
-            <div class="messages">
-                {% for message in messages %}
-                    <div class="alert alert-danger custom-alert">
-                        {{ message }}
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                {% endfor %}
+<div>
+    <!-- Заголовок -->
+    <div class="mb-6">
+        <h1 class="text-2xl md:text-3xl font-bold text-gray-800 flex items-center">
+            <i class="bi bi-credit-card mr-3 icon-darly"></i>
+            Оформление заказа
+        </h1>
+    </div>
+
+    {% if messages %}
+    <div class="mb-6">
+        {% for message in messages %}
+        <div class="bg-red-50 border border-red-200 rounded-xl p-4 flex items-start gap-3">
+            <i class="bi bi-exclamation-circle text-red-500 text-xl flex-shrink-0"></i>
+            <div class="flex-grow">
+                <p class="text-red-700">{{ message }}</p>
             </div>
-        {% endif %}
-        <div class="row mt-12">
-            <div class="col-md-5">
-                <h4 class="page-header">Заполните данные</h4>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Форма заказа -->
+        <div class="lg:col-span-2">
+            <div class="bg-white rounded-2xl shadow-lg p-6">
+                <h2 class="text-xl font-bold text-gray-800 mb-6 flex items-center">
+                    <i class="bi bi-person mr-2 icon-darly"></i>
+                    Данные для доставки
+                </h2>
+                
                 <form method="post" novalidate>
                     {% csrf_token %}
-                    <div class="form-error">{{ form.non_field_errors }}</div>
-                    {% for f in form %}
-                        {% if f.name != "customer" and f.name != "status" %}
-                            <div class="form-group">
-                                <label class="form-label" for="{{ f.id_for_label }}"> {{ f.label }}: </label>
+                    
+                    {% if form.non_field_errors %}
+                    <div class="mb-4 bg-red-50 border border-red-200 rounded-lg p-3 text-red-700 text-sm">
+                        {{ form.non_field_errors }}
+                    </div>
+                    {% endif %}
+                    
+                    <div class="space-y-4">
+                        {% for f in form %}
+                            {% if f.name != "customer" and f.name != "status" %}
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2" for="{{ f.id_for_label }}">
+                                    {{ f.label }}
+                                </label>
                                 {{ f }}
-                                <div class="form-error">{{ f.errors }}</div>
+                                {% if f.errors %}
+                                <p class="mt-1 text-sm text-red-500">{{ f.errors.0 }}</p>
+                                {% endif %}
                             </div>
-                        {% endif %}
-                    {% endfor %}
-                    <button type="submit" class="btn btn-outline-custom">Подтвердить заказ</button>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    
+                    <button type="submit" 
+                            class="w-full mt-6 py-4 rounded-xl text-white font-bold text-lg shadow-lg transition-all duration-300 hover:shadow-xl active:scale-[0.98] btn-darly">
+                        <i class="bi bi-check-circle mr-2"></i>
+                        Подтвердить заказ
+                    </button>
                 </form>
             </div>
-            <div class="col-md-4 offset-md-1">
-                <ul class="list-group">
-                    <li class="list-group-item active bg-darly-accent border-darly-accent mt-1">
-                        Заказ на сумму: {{ cart_total_price }} &#8381;</li>
-                </ul>
+        </div>
+        
+        <!-- Сводка заказа -->
+        <div class="lg:col-span-1">
+            <div class="sticky top-24">
+                <div class="bg-white rounded-2xl shadow-lg p-6">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                        <i class="bi bi-receipt mr-2 icon-darly"></i>
+                        Ваш заказ
+                    </h2>
+                    
+                    <div class="border-t border-gray-100 pt-4">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Итого к оплате:</span>
+                            <span class="text-2xl font-bold text-darly-accent">{{ cart_total_price|floatformat:0 }} &#8381;</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 pt-4 border-t border-gray-100">
+                        <ul class="space-y-3 text-sm text-gray-600">
+                            <li class="flex items-center">
+                                <i class="bi bi-shield-check mr-3 text-lg icon-darly"></i>
+                                <span>Безопасная оплата</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="bi bi-truck mr-3 text-lg icon-darly"></i>
+                                <span>Бесплатная доставка</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="bi bi-arrow-counterclockwise mr-3 text-lg icon-darly"></i>
+                                <span>Возврат 14 дней</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <a href="{% url 'cart:cart_detail' %}" 
+                   class="inline-flex items-center mt-4 text-gray-500 hover:text-gray-700 transition-colors">
+                    <i class="bi bi-arrow-left mr-2"></i>
+                    Вернуться в корзину
+                </a>
             </div>
         </div>
     </div>
+</div>
 {% endblock %}
