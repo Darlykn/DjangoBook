@@ -255,6 +255,26 @@ input[type="password"]:focus {
 
 .modal-header-darly {
     background: linear-gradient(135deg, var(--darly-primary), var(--darly-primary-dark));
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+}
+
+.modal-header-darly .modal-title {
+    display: flex;
+    align-items: center;
+    margin: 0;
+}
+
+.modal-header-darly .close {
+    padding: 0;
+    margin: 0;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
 }
 
 .close:hover {

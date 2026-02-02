@@ -86,7 +86,7 @@
                         </div>
                         {% if user.is_authenticated and can_review and not has_reviewed %}
                         <button class="px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:shadow-md btn-darly"
-                                data-toggle="modal" data-target="#myModal">
+                                onclick="openReviewModal()">
                             <i class="bi bi-pencil-square mr-1"></i>
                             Написать отзыв
                         </button>
@@ -275,21 +275,21 @@
 
 <!-- Modal для отзывов (только если пользователь может оставить отзыв) -->
 {% if user.is_authenticated and can_review and not has_reviewed %}
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="reviewModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content rounded-2xl overflow-hidden border-0 shadow-xl">
-            <div class="modal-header border-0 pb-0 modal-header-darly">
+<div id="reviewModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4" style="background-color: rgba(0, 0, 0, 0.5);" aria-labelledby="reviewModalLabel" role="dialog" aria-modal="true" onclick="if(event.target === this) closeReviewModal()">
+    <!-- Modal content -->
+    <div class="relative w-full max-w-md transform overflow-hidden rounded-2xl bg-white shadow-xl transition-all">
+            <div class="modal-header-darly">
                 <h5 class="modal-title text-white font-bold text-xl" id="reviewModalLabel">
                     <i class="bi bi-pencil-square mr-2"></i>
                     Оставьте свой отзыв
                 </h5>
-                <button type="button" class="close text-white opacity-100" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close text-white opacity-100 hover:opacity-80 transition-opacity" onclick="closeReviewModal()" aria-label="Close">
                     <span aria-hidden="true" class="text-2xl">&times;</span>
                 </button>
             </div>
             <form method="post">
                 {% csrf_token %}
-                <div class="modal-body p-6">
+                <div class="p-6">
                     <div class="bg-gray-50 rounded-xl p-4 mb-4">
                         <p class="text-center text-gray-600 mb-3">Выберите рейтинг:</p>
                         <div class="flex justify-center space-x-2">
@@ -310,8 +310,8 @@
                                   placeholder="Поделитесь своими впечатлениями о товаре..."></textarea>
                     </div>
                 </div>
-                <div class="modal-footer border-0 pt-0 px-6 pb-6">
-                    <button type="button" class="px-6 py-2.5 rounded-xl border border-gray-300 text-gray-600 font-medium hover:bg-gray-50 transition-colors" data-dismiss="modal">
+                <div class="flex justify-end gap-3 px-6 pb-6">
+                    <button type="button" class="px-6 py-2.5 rounded-xl border border-gray-300 text-gray-600 font-medium hover:bg-gray-50 transition-colors" onclick="closeReviewModal()">
                         Отмена
                     </button>
                     <button class="px-6 py-2.5 rounded-xl text-white font-medium transition-all duration-200 hover:shadow-md btn-darly" 
@@ -322,12 +322,35 @@
                 </div>
             </form>
         </div>
-    </div>
 </div>
 {% endif %}
 
 {% if user.is_authenticated and can_review and not has_reviewed %}
 <script>
+// Функции для управления модальным окном
+function openReviewModal() {
+    const modal = document.getElementById('reviewModal');
+    if (modal) {
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closeReviewModal() {
+    const modal = document.getElementById('reviewModal');
+    if (modal) {
+        modal.classList.add('hidden');
+        document.body.style.overflow = '';
+    }
+}
+
+// Закрытие по Escape
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeReviewModal();
+    }
+});
+
 // Интерактивный рейтинг в модальном окне
 document.addEventListener('DOMContentLoaded', function() {
     const stars = document.querySelectorAll('.rating-star');

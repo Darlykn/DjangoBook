@@ -21,12 +21,13 @@
     {% block mainmenu %}
     <nav class="bg-white shadow-md fixed top-0 left-0 right-0 z-50">
         <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="relative flex items-center justify-between h-16 gap-4">
+            <!-- Main navbar row -->
+            <div class="relative flex items-center justify-between h-16 gap-2 sm:gap-4">
                 <!-- Left side: Logo + Navigation -->
-                <div class="flex items-center gap-6 lg:gap-8 z-10">
+                <div class="flex items-center gap-6 lg:gap-8 z-10 flex-shrink-0">
                     <!-- Logo -->
                     <a href="{% url 'shop:product_list' %}" class="flex-shrink-0">
-                        <img src="{% static 'shop/img/logo4.png' %}" alt="Logo" class="h-12 w-auto">
+                        <img src="{% static 'shop/img/logo4.png' %}" alt="Logo" class="h-10 sm:h-12 w-auto">
                     </a>
 
                     <!-- Desktop Navigation -->
@@ -56,7 +57,8 @@
                     </div>
                 </div>
 
-                <!-- Center: Search (Absolute positioning for true center) -->
+                <!-- Center: Search -->
+                <!-- Desktop: absolute center -->
                 <div class="hidden lg:flex absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2">
                     <form method="get" action="/" class="flex items-center">
                         <div class="relative">
@@ -68,8 +70,20 @@
                         </div>
                     </form>
                 </div>
+                <!-- Mobile: in flex flow -->
+                <div class="lg:hidden flex-1 mx-1 sm:mx-2">
+                    <form method="get" action="/">
+                        <div class="relative">
+                            <input type="search" name="q" placeholder="Поиск..." 
+                                   class="w-full pl-3 pr-8 py-2 border border-gray-200 rounded-full text-sm focus:outline-none focus:ring-2 search-input bg-gray-50">
+                            <button type="submit" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 search-btn-hover">
+                                <i class="bi bi-search text-sm"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
 
-                <!-- Right side: Profile -->
+                <!-- Right side: Profile - Desktop -->
                 <div class="hidden lg:flex items-center gap-4 z-10">
                         {% if request.user.is_authenticated %}
                             <!-- Профиль с выпадающим меню -->
@@ -107,11 +121,10 @@
                         <a href="{% url 'cart:cart_detail' %}" class="text-gray-600 transition-colors nav-link-hover" title="Корзина">
                             <i class="bi bi-bag-heart text-2xl"></i>
                         </a>
-                    </div>
                 </div>
 
-                <!-- Mobile menu button -->
-                <div class="lg:hidden flex items-center space-x-3">
+                <!-- Mobile: Cart + Menu button -->
+                <div class="lg:hidden flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
                     <a href="{% url 'cart:cart_detail' %}" class="text-gray-600 nav-link-hover">
                         <i class="bi bi-bag-heart text-xl"></i>
                     </a>
@@ -125,52 +138,69 @@
         </div>
 
         <!-- Mobile menu -->
-        <div id="mobile-menu" class="hidden lg:hidden bg-white border-t">
-            <div class="px-4 py-3 space-y-3">
-                <!-- Каталог и категории -->
-                <div class="border-b pb-3">
-                    <p class="text-sm font-semibold text-gray-700 mb-2 flex items-center">
-                        <i class="bi bi-grid mr-2 icon-darly"></i>Каталог
-                    </p>
-                    <a href="/" class="block py-2 px-3 text-gray-700 font-medium rounded-lg hover:bg-gray-50 nav-link-hover">
-                        Все категории
-                    </a>
-                    {% for c in categories %}
-                    <a href="{{ c.get_absolute_url }}" class="block py-2 px-3 text-gray-600 rounded-lg hover:bg-gray-50 nav-link-hover">{{ c.title }}</a>
-                    {% endfor %}
-                </div>
+        <div id="mobile-menu" class="hidden lg:hidden bg-white border-t max-h-[calc(100vh-4rem)] overflow-y-auto">
+            <div class="px-4 py-4 space-y-4">
                 
-                <a href="{% url 'shop:about' %}" class="block text-gray-700 font-medium nav-link-hover">О нас</a>
-                
-                <!-- Поиск мобильный -->
-                <form method="get" action="/" class="pt-2">
-                    <input type="search" name="q" placeholder="Поиск по книгам, авторам..." 
-                           class="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 search-input">
-                </form>
-                
-                <div class="border-t pt-3 space-y-2">
+                <!-- 1. User Profile Section -->
+                <div class="pb-4 border-b border-gray-100">
                     {% if request.user.is_authenticated %}
-                        <div class="flex items-center gap-2 px-4 py-2 rounded-full bg-darly-light mx-auto w-fit mb-3">
-                            <div class="w-7 h-7 rounded-full flex items-center justify-center text-white font-semibold text-sm bg-darly-primary">
-                                {{ user.name|slice:":1"|upper }}
+                        <!-- User profile with collapsible menu -->
+                        <button onclick="toggleMobileUserMenu()" class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl bg-darly-light hover:bg-opacity-80 transition-all">
+                            <div class="flex items-center gap-3">
+                                <div class="w-9 h-9 rounded-full flex items-center justify-center text-white font-semibold bg-darly-primary">
+                                    {{ user.name|slice:":1"|upper }}
+                                </div>
+                                <span class="font-semibold text-darly-dark">{{ user.name }}</span>
                             </div>
-                            <span class="font-medium text-darly-dark">{{ user.name }}</span>
+                            <svg id="user-menu-arrow" class="w-5 h-5 text-darly-dark transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </button>
+                        <!-- Collapsible user menu -->
+                        <div id="mobile-user-submenu" class="hidden mt-2 bg-white rounded-md shadow-lg border border-gray-100">
+                            <div class="py-1">
+                                <a href="{% url 'orders:my-orders' %}" class="block px-4 py-2 text-sm text-gray-700 dropdown-item-hover">
+                                    <i class="bi bi-box-seam mr-2"></i>Мои заказы
+                                </a>
+                                {% if user.is_staff %}
+                                <a href="/admin/" class="block px-4 py-2 text-sm text-gray-700 dropdown-item-hover">
+                                    <i class="bi bi-gear mr-2"></i>Администрирование
+                                </a>
+                                {% endif %}
+                                <div class="border-t my-1"></div>
+                                <a href="{% url 'users:logout' %}" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                                    <i class="bi bi-box-arrow-right mr-2"></i>Выйти
+                                </a>
+                            </div>
                         </div>
-                        <a href="{% url 'orders:my-orders' %}" class="flex items-center justify-center gap-2 py-2 text-white rounded-lg btn-primary">
-                            <i class="bi bi-box-seam"></i>Мои заказы
-                        </a>
-                        {% if user.is_staff %}
-                        <a href="/admin/" class="flex items-center justify-center gap-2 py-2 border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50">
-                            <i class="bi bi-gear"></i>Администрирование
-                        </a>
-                        {% endif %}
-                        <a href="{% url 'users:logout' %}" class="flex items-center justify-center gap-2 py-2 border border-red-300 rounded-lg text-red-600 hover:bg-red-50">
-                            <i class="bi bi-box-arrow-right"></i>Выйти
-                        </a>
                     {% else %}
-                        <a href="{% url 'users:login' %}" class="block text-center py-2 text-white rounded-lg btn-primary">Войти</a>
+                        <a href="{% url 'users:login' %}" class="flex items-center justify-center gap-2 py-3 text-white rounded-xl btn-darly font-medium">
+                            <i class="bi bi-person"></i>
+                            Войти в аккаунт
+                        </a>
                     {% endif %}
                 </div>
+
+                <!-- 2. About link -->
+                <a href="{% url 'shop:about' %}" class="flex items-center gap-3 px-3 py-2.5 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors nav-link-hover">
+                    <i class="bi bi-info-circle text-darly-primary"></i>
+                    О нас
+                </a>
+
+                <!-- 3. Categories -->
+                <div class="pt-3 border-t border-gray-100">
+                    <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 px-3">Каталог</p>
+                    <div class="space-y-1">
+                        <a href="/" class="flex items-center gap-3 px-3 py-2.5 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors nav-link-hover">
+                            <i class="bi bi-grid text-darly-primary"></i>
+                            Все категории
+                        </a>
+                        {% for c in categories %}
+                        <a href="{{ c.get_absolute_url }}" class="block px-3 py-2 pl-10 text-gray-600 rounded-lg hover:bg-gray-50 transition-colors nav-link-hover">{{ c.title }}</a>
+                        {% endfor %}
+                    </div>
+                </div>
+                
             </div>
         </div>
     </nav>
@@ -182,7 +212,7 @@
 
     <!-- Header -->
     {% block header %}
-    <header class="py-6 md:py-8 header-gradient">
+    <header class="py-10 md:py-12 header-gradient">
         <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white tracking-wide darly-wordmark">DARLY</h1>
             <p class="mt-4 text-white text-sm md:text-base max-w-4xl mx-auto">Хорошо унаследовать библиотеку, а еще лучше собрать свою собственную - Огастин Биррелл</p>
@@ -234,7 +264,7 @@
     <!-- Footer -->
     <footer class="py-6 header-gradient">
         <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-            <p class="text-center text-white text-sm">&copy; 2026 Интернет-магазин "Darly"</p>
+            <p class="text-center text-white text-sm">&copy; Django website Darly 2026</p>
         </div>
     </footer>
     <!-- End Footer -->
@@ -243,6 +273,13 @@
         function toggleMobileMenu() {
             const menu = document.getElementById('mobile-menu');
             menu.classList.toggle('hidden');
+        }
+        
+        function toggleMobileUserMenu() {
+            const submenu = document.getElementById('mobile-user-submenu');
+            const arrow = document.getElementById('user-menu-arrow');
+            submenu.classList.toggle('hidden');
+            arrow.classList.toggle('rotate-180');
         }
     </script>
     
