@@ -20,27 +20,29 @@
     <!-- Navbar -->
     {% block mainmenu %}
     <nav class="bg-white shadow-md fixed top-0 left-0 right-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 <!-- Logo -->
                 <a href="{% url 'shop:product_list' %}" class="flex-shrink-0">
-                    <img src="{% static 'shop/img/logo.png' %}" alt="Logo" class="h-12 w-auto">
+                    <img src="{% static 'shop/img/logo4.png' %}" alt="Logo" class="h-12 w-auto">
                 </a>
 
                 <!-- Desktop Navigation -->
-                <div class="hidden md:flex items-center space-x-6">
-                    <a href="/" class="text-gray-700 font-medium transition-colors nav-link-hover">Каталог</a>
-                    
-                    <!-- Категории dropdown -->
+                <div class="hidden md:flex items-center space-x-3 lg:space-x-4">
+                    <!-- Каталог с категориями dropdown -->
                     <div class="relative group">
-                        <button class="text-gray-700 font-medium transition-colors flex items-center nav-link-hover">
-                            Категории
-                            <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <button class="px-4 py-2 text-white rounded-lg transition-colors flex items-center gap-1 btn-primary">
+                            Каталог
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                             </svg>
                         </button>
-                        <div class="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                        <div class="absolute left-0 mt-2 w-52 bg-white rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                             <div class="py-1">
+                                <a href="/" class="block px-4 py-2 text-sm text-gray-700 dropdown-item-hover font-medium">
+                                    <i class="bi bi-grid mr-2"></i>Все категории
+                                </a>
+                                <div class="border-t my-1"></div>
                                 {% for c in categories %}
                                 <a href="{{ c.get_absolute_url }}" class="block px-4 py-2 text-sm text-gray-700 dropdown-item-hover">{{ c.title }}</a>
                                 {% endfor %}
@@ -48,13 +50,13 @@
                         </div>
                     </div>
                     
-                    <a href="{% url 'shop:about' %}" class="text-gray-700 font-medium transition-colors nav-link-hover">О нас</a>
+                    <a href="{% url 'shop:about' %}" class="text-gray-700 font-medium transition-colors nav-link-hover whitespace-nowrap">О нас</a>
                     
                     <!-- Поиск -->
                     <form method="get" action="/" class="flex items-center">
                         <div class="relative">
-                            <input type="search" name="q" placeholder="Поиск..." 
-                                   class="w-48 pl-4 pr-10 py-2 border border-gray-300 rounded-full text-sm focus:outline-none focus:ring-2 focus:border-transparent search-input">
+                            <input type="search" name="q" placeholder="Поиск по книгам, авторам..." 
+                                   class="w-80 lg:w-96 pl-4 pr-10 py-2 border border-gray-300 rounded-full text-sm focus:outline-none focus:ring-2 focus:border-transparent search-input">
                             <button type="submit" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 search-btn-hover">
                                 <i class="bi bi-search"></i>
                             </button>
@@ -65,9 +67,34 @@
                 <!-- Right side -->
                 <div class="hidden md:flex items-center space-x-4">
                     {% if request.user.is_authenticated %}
-                        <span class="font-medium user-name-color">{{ user.name }}</span>
-                        <a href="{% url 'users:logout' %}" class="px-4 py-2 text-gray-600 hover:text-gray-800 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">Выйти</a>
-                        <a href="{% url 'orders:my-orders' %}" class="px-4 py-2 text-white rounded-lg transition-colors btn-primary">Мои заказы</a>
+                        <!-- Профиль с выпадающим меню -->
+                        <div class="relative group">
+                            <button class="flex items-center gap-2 px-4 py-2 rounded-full bg-darly-light hover:bg-opacity-80 transition-all">
+                                <div class="w-7 h-7 rounded-full flex items-center justify-center text-white font-semibold text-sm bg-darly-primary">
+                                    {{ user.name|slice:":1"|upper }}
+                                </div>
+                                <span class="font-medium text-darly-dark">{{ user.name }}</span>
+                                <svg class="w-4 h-4 text-darly-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                </svg>
+                            </button>
+                            <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                                <div class="py-1">
+                                    <a href="{% url 'orders:my-orders' %}" class="block px-4 py-2 text-sm text-gray-700 dropdown-item-hover">
+                                        <i class="bi bi-box-seam mr-2"></i>Мои заказы
+                                    </a>
+                                    {% if user.is_staff %}
+                                    <a href="/admin/" class="block px-4 py-2 text-sm text-gray-700 dropdown-item-hover">
+                                        <i class="bi bi-gear mr-2"></i>Администрирование
+                                    </a>
+                                    {% endif %}
+                                    <div class="border-t my-1"></div>
+                                    <a href="{% url 'users:logout' %}" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                                        <i class="bi bi-box-arrow-right mr-2"></i>Выйти
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
                     {% else %}
                         <a href="{% url 'users:login' %}" class="px-4 py-2 text-white rounded-lg transition-colors btn-primary">Войти</a>
                     {% endif %}
@@ -75,12 +102,6 @@
                     <a href="{% url 'cart:cart_detail' %}" class="text-gray-600 transition-colors nav-link-hover" title="Корзина">
                         <i class="bi bi-bag-heart text-2xl"></i>
                     </a>
-                    
-                    {% if user.is_authenticated and user.is_staff %}
-                    <a href="/admin/" class="text-gray-600 transition-colors nav-link-hover" title="Администрирование">
-                        <i class="bi bi-gear text-2xl"></i>
-                    </a>
-                    {% endif %}
                 </div>
 
                 <!-- Mobile menu button -->
@@ -100,31 +121,48 @@
         <!-- Mobile menu -->
         <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
             <div class="px-4 py-3 space-y-3">
-                <a href="/" class="block text-gray-700 font-medium nav-link-hover">Каталог</a>
-                <div class="border-t pt-2">
-                    <p class="text-sm text-gray-500 mb-2">Категории:</p>
+                <!-- Каталог и категории -->
+                <div class="border-b pb-3">
+                    <p class="text-sm font-semibold text-gray-700 mb-2 flex items-center">
+                        <i class="bi bi-grid mr-2 icon-darly"></i>Каталог
+                    </p>
+                    <a href="/" class="block py-2 px-3 text-gray-700 font-medium rounded-lg hover:bg-gray-50 nav-link-hover">
+                        Все категории
+                    </a>
                     {% for c in categories %}
-                    <a href="{{ c.get_absolute_url }}" class="block py-1 text-gray-600 nav-link-hover pl-2">{{ c.title }}</a>
+                    <a href="{{ c.get_absolute_url }}" class="block py-2 px-3 text-gray-600 rounded-lg hover:bg-gray-50 nav-link-hover">{{ c.title }}</a>
                     {% endfor %}
                 </div>
-                <a href="{% url 'shop:about' %}" class="block text-gray-700 font-medium border-t pt-2 nav-link-hover">О нас</a>
+                
+                <a href="{% url 'shop:about' %}" class="block text-gray-700 font-medium nav-link-hover">О нас</a>
                 
                 <!-- Поиск мобильный -->
                 <form method="get" action="/" class="pt-2">
-                    <input type="search" name="q" placeholder="Поиск..." 
+                    <input type="search" name="q" placeholder="Поиск по книгам, авторам..." 
                            class="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 search-input">
                 </form>
                 
                 <div class="border-t pt-3 space-y-2">
                     {% if request.user.is_authenticated %}
-                        <span class="block font-medium user-name-color">{{ user.name }}</span>
-                        <a href="{% url 'orders:my-orders' %}" class="block text-center py-2 text-white rounded-lg btn-primary">Мои заказы</a>
-                        <a href="{% url 'users:logout' %}" class="block text-center py-2 border border-gray-300 rounded-lg text-gray-600">Выйти</a>
+                        <div class="flex items-center gap-2 px-4 py-2 rounded-full bg-darly-light mx-auto w-fit mb-3">
+                            <div class="w-7 h-7 rounded-full flex items-center justify-center text-white font-semibold text-sm bg-darly-primary">
+                                {{ user.name|slice:":1"|upper }}
+                            </div>
+                            <span class="font-medium text-darly-dark">{{ user.name }}</span>
+                        </div>
+                        <a href="{% url 'orders:my-orders' %}" class="flex items-center justify-center gap-2 py-2 text-white rounded-lg btn-primary">
+                            <i class="bi bi-box-seam"></i>Мои заказы
+                        </a>
+                        {% if user.is_staff %}
+                        <a href="/admin/" class="flex items-center justify-center gap-2 py-2 border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50">
+                            <i class="bi bi-gear"></i>Администрирование
+                        </a>
+                        {% endif %}
+                        <a href="{% url 'users:logout' %}" class="flex items-center justify-center gap-2 py-2 border border-red-300 rounded-lg text-red-600 hover:bg-red-50">
+                            <i class="bi bi-box-arrow-right"></i>Выйти
+                        </a>
                     {% else %}
                         <a href="{% url 'users:login' %}" class="block text-center py-2 text-white rounded-lg btn-primary">Войти</a>
-                    {% endif %}
-                    {% if user.is_authenticated and user.is_staff %}
-                    <a href="/admin/" class="block text-center py-2 border border-gray-300 rounded-lg text-gray-600">Админка</a>
                     {% endif %}
                 </div>
             </div>
@@ -138,16 +176,16 @@
 
     <!-- Header -->
     <header class="py-12 md:py-16 header-gradient">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white tracking-wide">DARLY</h1>
-            <p class="mt-4 text-rose-100 text-sm md:text-base max-w-2xl mx-auto">Хорошо унаследовать библиотеку, а еще лучше собрать свою собственную - Огастин Биррелл</p>
+            <p class="mt-4 text-white text-sm md:text-base max-w-2xl mx-auto">Хорошо унаследовать библиотеку, а еще лучше собрать свою собственную - Огастин Биррелл</p>
         </div>
     </header>
     <!-- End Header -->
 
     <!-- Content -->
     <main class="flex-grow">
-        <div id="content" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div id="content" class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
             {% block content %}{% endblock %}
         </div>
     </main>
@@ -155,7 +193,7 @@
 
     <!-- Pagination -->
     {% if page_obj.has_other_pages %}
-    <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
+    <nav class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pb-8">
         <ul class="flex justify-center items-center space-x-1">
             {% if page_obj.has_previous %}
             <li>
@@ -187,7 +225,7 @@
 
     <!-- Footer -->
     <footer class="py-6 header-gradient">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
             <p class="text-center text-white text-sm">Copyright &copy; Django website by Anastasia Kosheleva 2024</p>
         </div>
     </footer>

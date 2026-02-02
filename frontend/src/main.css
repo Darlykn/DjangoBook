@@ -194,6 +194,43 @@ input.form-control:focus {
     --tw-ring-color: var(--darly-primary);
 }
 
+/* Auth form inputs (login/register) */
+.auth-input,
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 2.5rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.75rem;
+    font-size: 0.95rem;
+    background: #f9fafb;
+    transition: all 0.2s ease;
+}
+
+.auth-input:focus,
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
+    outline: none;
+    border-color: var(--darly-primary);
+    box-shadow: 0 0 0 3px var(--darly-primary-light);
+    background: white;
+}
+
+/* Form error styling */
+.form-error {
+    color: #ef4444;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+.form-error ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
 /* =============================================
    Component Styles - Modals
    ============================================= */
