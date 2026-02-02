@@ -28,8 +28,7 @@
                 <!-- Теги/Бейджи (фильтры) -->
                 <div class="flex flex-wrap gap-2 mb-4">
                     <a href="{{ product.id_category.get_absolute_url }}" 
-                       class="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200"
-                       style="background-color: rgba(252, 168, 144, 0.2); color: rgb(200, 100, 80);">
+                       class="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200 bg-darly-light text-darly-dark">
                         <i class="bi bi-bookmark-fill mr-1.5"></i>
                         {{ product.id_category.title }}
                     </a>
@@ -75,7 +74,7 @@
                             <div class="flex">
                                 {% for i in "12345" %}
                                     {% if forloop.counter <= product.get_average_review_score %}
-                                    <i class="bi bi-star-fill text-xl" style="color: rgb(253, 148, 118);"></i>
+                                    <i class="bi bi-star-fill text-xl star-filled"></i>
                                     {% else %}
                                     <i class="bi bi-star text-xl text-gray-300"></i>
                                     {% endif %}
@@ -85,10 +84,7 @@
                             <span class="text-gray-400">({{ product.reviews.count }} отзывов)</span>
                         </div>
                         {% if user.is_authenticated and can_review and not has_reviewed %}
-                        <button class="px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:shadow-md"
-                                style="background-color: rgb(252, 168, 144); color: white;"
-                                onmouseover="this.style.backgroundColor='rgb(253, 148, 118)'"
-                                onmouseout="this.style.backgroundColor='rgb(252, 168, 144)'"
+                        <button class="px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:shadow-md btn-darly"
                                 data-toggle="modal" data-target="#myModal">
                             <i class="bi bi-pencil-square mr-1"></i>
                             Написать отзыв
@@ -109,7 +105,7 @@
                     {% elif not user.is_authenticated %}
                     <p class="mt-3 text-sm text-gray-500 bg-gray-50 rounded-lg p-3">
                         <i class="bi bi-info-circle mr-1"></i>
-                        <a href="{% url 'users:login' %}" class="font-medium underline hover:no-underline" style="color: rgb(253, 148, 118);">Войдите</a> 
+                        <a href="{% url 'users:login' %}" class="font-medium underline hover:no-underline text-darly-accent">Войдите</a> 
                         в аккаунт, чтобы оставить отзыв.
                     </p>
                     {% endif %}
@@ -136,14 +132,14 @@
                         {% with discount_percent=15 %}
                         {% widthratio product.price 100 discount_percent as discount_amount %}
                         <div class="flex items-baseline gap-3 mb-2">
-                            <span class="text-3xl font-bold" style="color: rgb(253, 148, 118);">
+                            <span class="text-3xl font-bold text-darly-accent">
                                 {{ product.price|floatformat:0 }} &#8381;
                             </span>
                             <span class="text-lg text-gray-400 line-through">
                                 {% widthratio product.price 85 100 as original_price %}
                                 {{ original_price }} &#8381;
                             </span>
-                            <span class="px-2 py-0.5 text-sm font-medium rounded-md text-white" style="background-color: rgb(253, 148, 118);">
+                            <span class="px-2 py-0.5 text-sm font-medium rounded-md text-white bg-darly-accent">
                                 -{{ discount_percent }}%
                             </span>
                         </div>
@@ -160,10 +156,7 @@
                         <input type="hidden" name="quantity" value="1">
                         <!-- Кнопка купить -->
                         <button type="submit" 
-                                class="w-full py-4 rounded-xl text-white font-bold text-lg shadow-lg transition-all duration-300 hover:shadow-xl active:scale-[0.98]"
-                                style="background-color: rgb(252, 168, 144);"
-                                onmouseover="this.style.backgroundColor='rgb(253, 148, 118)'"
-                                onmouseout="this.style.backgroundColor='rgb(252, 168, 144)'">
+                                class="w-full py-4 rounded-xl text-white font-bold text-lg shadow-lg transition-all duration-300 hover:shadow-xl active:scale-[0.98] btn-darly">
                             <i class="bi bi-cart-plus mr-2"></i>
                             В корзину
                         </button>
@@ -192,24 +185,24 @@
                 <!-- Блок доставки -->
                 <div class="bg-white rounded-2xl shadow-lg p-6">
                     <h3 class="font-semibold text-gray-800 mb-4 flex items-center">
-                        <i class="bi bi-truck mr-2" style="color: rgb(252, 168, 144);"></i>
+                        <i class="bi bi-truck mr-2 icon-darly"></i>
                         Доставка и оплата
                     </h3>
                     <ul class="space-y-3 text-sm text-gray-600">
                         <li class="flex items-start">
-                            <i class="bi bi-check-circle-fill mr-2 mt-0.5 flex-shrink-0" style="color: rgb(252, 168, 144);"></i>
+                            <i class="bi bi-check-circle-fill mr-2 mt-0.5 flex-shrink-0 icon-darly"></i>
                             <span>Склады во многих городах России</span>
                         </li>
                         <li class="flex items-start">
-                            <i class="bi bi-check-circle-fill mr-2 mt-0.5 flex-shrink-0" style="color: rgb(252, 168, 144);"></i>
+                            <i class="bi bi-check-circle-fill mr-2 mt-0.5 flex-shrink-0 icon-darly"></i>
                             <span>Отправка 2-5 рабочих дней</span>
                         </li>
                         <li class="flex items-start">
-                            <i class="bi bi-check-circle-fill mr-2 mt-0.5 flex-shrink-0" style="color: rgb(252, 168, 144);"></i>
+                            <i class="bi bi-check-circle-fill mr-2 mt-0.5 flex-shrink-0 icon-darly"></i>
                             <span>Курьером до двери</span>
                         </li>
                         <li class="flex items-start">
-                            <i class="bi bi-check-circle-fill mr-2 mt-0.5 flex-shrink-0" style="color: rgb(252, 168, 144);"></i>
+                            <i class="bi bi-check-circle-fill mr-2 mt-0.5 flex-shrink-0 icon-darly"></i>
                             <span>Оплата при получении</span>
                         </li>
                     </ul>
@@ -222,9 +215,9 @@
     <div class="mt-12">
         <div class="bg-white rounded-2xl shadow-lg p-6">
             <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-                <i class="bi bi-chat-left-quote mr-3" style="color: rgb(252, 168, 144);"></i>
+                <i class="bi bi-chat-left-quote mr-3 icon-darly"></i>
                 Отзывы покупателей
-                <span class="ml-3 px-3 py-1 text-sm font-medium rounded-full" style="background-color: rgba(252, 168, 144, 0.2); color: rgb(200, 100, 80);">
+                <span class="ml-3 px-3 py-1 text-sm font-medium rounded-full badge-darly">
                     {{ product.reviews.count }}
                 </span>
             </h2>
@@ -235,8 +228,7 @@
                 <div class="border border-gray-100 rounded-xl p-5 hover:shadow-md transition-shadow duration-200">
                     <div class="flex items-start justify-between mb-3">
                         <div class="flex items-center">
-                            <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold mr-3"
-                                 style="background-color: rgb(252, 168, 144);">
+                            <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold mr-3 bg-darly-primary">
                                 {% if review.id_user %}
                                     {{ review.id_user.name|slice:":1"|upper }}
                                 {% else %}
@@ -258,7 +250,7 @@
                         <div class="flex items-center">
                             {% for i in "12345" %}
                                 {% if forloop.counter <= review.rating %}
-                                <i class="bi bi-star-fill" style="color: rgb(253, 148, 118);"></i>
+                                <i class="bi bi-star-fill star-filled"></i>
                                 {% else %}
                                 <i class="bi bi-star text-gray-300"></i>
                                 {% endif %}
@@ -286,7 +278,7 @@
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="reviewModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content rounded-2xl overflow-hidden border-0 shadow-xl">
-            <div class="modal-header border-0 pb-0" style="background: linear-gradient(135deg, rgb(252, 168, 144), rgb(253, 148, 118));">
+            <div class="modal-header border-0 pb-0 modal-header-darly">
                 <h5 class="modal-title text-white font-bold text-xl" id="reviewModalLabel">
                     <i class="bi bi-pencil-square mr-2"></i>
                     Оставьте свой отзыв
@@ -314,8 +306,7 @@
                     <div>
                         <label class="block text-gray-700 font-medium mb-2">Ваш отзыв:</label>
                         <textarea name="text" rows="4" 
-                                  class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-transparent focus:ring-2 focus:outline-none resize-none transition-all"
-                                  style="--tw-ring-color: rgb(252, 168, 144);"
+                                  class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-transparent focus:ring-2 focus:outline-none resize-none transition-all ring-darly"
                                   placeholder="Поделитесь своими впечатлениями о товаре..."></textarea>
                     </div>
                 </div>
@@ -323,11 +314,8 @@
                     <button type="button" class="px-6 py-2.5 rounded-xl border border-gray-300 text-gray-600 font-medium hover:bg-gray-50 transition-colors" data-dismiss="modal">
                         Отмена
                     </button>
-                    <button class="px-6 py-2.5 rounded-xl text-white font-medium transition-all duration-200 hover:shadow-md" 
-                            type="submit"
-                            style="background-color: rgb(252, 168, 144);"
-                            onmouseover="this.style.backgroundColor='rgb(253, 148, 118)'"
-                            onmouseout="this.style.backgroundColor='rgb(252, 168, 144)'">
+                    <button class="px-6 py-2.5 rounded-xl text-white font-medium transition-all duration-200 hover:shadow-md btn-darly" 
+                            type="submit">
                         <i class="bi bi-send mr-1"></i>
                         Отправить отзыв
                     </button>
@@ -388,37 +376,5 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 {% endif %}
-
-<style>
-/* Стили для поля количества */
-input[type="number"],
-select.form-control,
-input.form-control {
-    width: 100%;
-    padding: 0.5rem 0.75rem;
-    border: 1px solid #e5e7eb;
-    border-radius: 0.5rem;
-    font-size: 1rem;
-    text-align: center;
-    background: white;
-}
-
-input[type="number"]:focus,
-select.form-control:focus,
-input.form-control:focus {
-    outline: none;
-    border-color: rgb(252, 168, 144);
-    box-shadow: 0 0 0 3px rgba(252, 168, 144, 0.2);
-}
-
-/* Bootstrap modal overrides для соответствия новой цветовой схеме */
-.modal-content {
-    border: none;
-}
-
-.close:hover {
-    opacity: 0.8;
-}
-</style>
 
 {% endblock %}

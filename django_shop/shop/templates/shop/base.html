@@ -24,7 +24,7 @@
             <div class="flex items-center justify-between h-16">
                 <!-- Logo -->
                 <a href="{% url 'shop:product_list' %}" class="flex-shrink-0">
-                    <img src="{% static 'shop/img/logo2.png' %}" alt="Logo" class="h-12 w-auto">
+                    <img src="{% static 'shop/img/logo.png' %}" alt="Logo" class="h-12 w-auto">
                 </a>
 
                 <!-- Desktop Navigation -->
@@ -159,7 +159,7 @@
         <ul class="flex justify-center items-center space-x-1">
             {% if page_obj.has_previous %}
             <li>
-                <a href="?page={{ page_obj.previous_page_number }}" class="px-4 py-2 text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">Предыдущая</a>
+                <a href="?page={{ page_obj.previous_page_number }}" class="px-4 py-2 text-gray-600 bg-white border border-gray-300 rounded-lg pagination-link">Предыдущая</a>
             </li>
             {% endif %}
             
@@ -170,14 +170,14 @@
                 </li>
                 {% elif p >= page_obj.number|add:-2 and p <= page_obj.number|add:2 %}
                 <li>
-                    <a href="?page={{ p }}" class="px-4 py-2 text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">{{ p }}</a>
+                    <a href="?page={{ p }}" class="px-4 py-2 text-gray-600 bg-white border border-gray-300 rounded-lg pagination-link">{{ p }}</a>
                 </li>
                 {% endif %}
             {% endfor %}
             
             {% if page_obj.has_next %}
             <li>
-                <a href="?page={{ page_obj.next_page_number }}" class="px-4 py-2 text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">Следующая</a>
+                <a href="?page={{ page_obj.next_page_number }}" class="px-4 py-2 text-gray-600 bg-white border border-gray-300 rounded-lg pagination-link">Следующая</a>
             </li>
             {% endif %}
         </ul>
@@ -200,47 +200,5 @@
         }
     </script>
     
-    <style>
-        /* DARLY Color Scheme */
-        /* Primary: rgb(252, 168, 144) */
-        /* Accent/Hover: rgb(253, 148, 118) */
-        
-        .header-gradient {
-            background: linear-gradient(135deg, rgb(252, 168, 144), rgb(253, 148, 118));
-        }
-        
-        .nav-link-hover:hover {
-            color: rgb(253, 148, 118);
-        }
-        
-        .dropdown-item-hover:hover {
-            background-color: rgba(252, 168, 144, 0.1);
-            color: rgb(253, 148, 118);
-        }
-        
-        .search-input:focus {
-            --tw-ring-color: rgba(252, 168, 144, 0.5);
-        }
-        
-        .search-btn-hover:hover {
-            color: rgb(253, 148, 118);
-        }
-        
-        .user-name-color {
-            color: rgb(252, 168, 144);
-        }
-        
-        .btn-primary {
-            background-color: rgb(252, 168, 144);
-        }
-        
-        .btn-primary:hover {
-            background-color: rgb(253, 148, 118);
-        }
-        
-        .pagination-active {
-            background-color: rgb(252, 168, 144);
-        }
-    </style>
 </body>
 </html>

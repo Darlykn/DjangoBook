@@ -2,27 +2,292 @@
 
 /* Сканировать Django шаблоны для генерации классов */
 @source "../../django_shop/shop/templates/**/*.html";
+@source "../../django_shop/cart/templates/**/*.html";
+@source "../../django_shop/orders/templates/**/*.html";
 
-/* DARLY Global Color Scheme Styles */
-/* Primary: rgb(252, 168, 144) - #fca890 */
-/* Accent/Hover: rgb(253, 148, 118) - #fd9476 */
+/* =============================================
+   DARLY - Global Color Scheme & Variables
+   Primary: rgb(141, 170, 166) - #8DAAA6 (teal)
+   Accent: rgb(253, 148, 118) - #fd9476 (coral)
+   ============================================= */
 
 :root {
-    --darly-primary: rgb(252, 168, 144);
+    --darly-primary: rgb(141, 170, 166);
     --darly-accent: rgb(253, 148, 118);
-    --darly-primary-light: rgba(252, 168, 144, 0.2);
-    --darly-primary-dark: rgb(200, 100, 80);
+    --darly-accent-dark: rgb(253, 148, 118);
+    --darly-primary-light: rgba(141, 170, 166, 0.2);
+    --darly-primary-dark: rgb(100, 130, 126);
 }
 
-/* Card hover effects */
+/* =============================================
+   Utility Classes - Colors
+   ============================================= */
+
+/* Text colors */
+.text-darly-primary {
+    color: var(--darly-primary);
+}
+
+.text-darly-accent {
+    color: var(--darly-accent);
+}
+
+.text-darly-dark {
+    color: var(--darly-primary-dark);
+}
+
+/* Background colors */
+.bg-darly-primary {
+    background-color: var(--darly-primary);
+}
+
+.bg-darly-accent {
+    background-color: var(--darly-accent);
+}
+
+.bg-darly-light {
+    background-color: var(--darly-primary-light);
+}
+
+/* Border colors */
+.border-darly-primary {
+    border-color: var(--darly-primary);
+}
+
+.border-darly-accent {
+    border-color: var(--darly-accent);
+}
+
+/* =============================================
+   Component Styles - Header & Footer
+   ============================================= */
+
+.header-gradient {
+    background: linear-gradient(135deg, rgba(141, 170, 166, 1) 0%, rgba(141, 170, 166, 1) 100%);
+}
+
+/* =============================================
+   Component Styles - Navigation
+   ============================================= */
+
+.nav-link-hover:hover {
+    color: var(--darly-accent);
+}
+
+.dropdown-item-hover:hover {
+    background-color: var(--darly-primary-light);
+    color: var(--darly-accent);
+}
+
+.search-input:focus {
+    --tw-ring-color: rgba(141, 170, 166, 0.5);
+}
+
+.search-btn-hover:hover {
+    color: var(--darly-accent);
+}
+
+.user-name-color {
+    color: var(--darly-accent);
+}
+
+/* =============================================
+   Component Styles - Buttons
+   ============================================= */
+
+.btn-primary {
+    background-color: var(--darly-accent);
+}
+
+.btn-primary:hover {
+    background-color: var(--darly-accent-dark);
+}
+
+.btn-darly {
+    background-color: var(--darly-accent);
+    color: white;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-darly:hover {
+    background-color: var(--darly-accent-dark);
+    box-shadow: 0 4px 12px rgba(141, 170, 166, 0.3);
+}
+
+.btn-darly-outline {
+    border: 2px solid var(--darly-accent);
+    color: var(--darly-accent);
+    background-color: transparent;
+    transition: all 0.2s ease;
+}
+
+.btn-darly-outline:hover {
+    background-color: var(--darly-accent);
+    color: white;
+}
+
+/* =============================================
+   Component Styles - Pagination
+   ============================================= */
+
+.pagination-active {
+    background-color: var(--darly-accent-dark);
+}
+
+.pagination-link {
+    transition: all 0.2s ease;
+}
+
+.pagination-link:hover {
+    background-color: var(--darly-accent) !important;
+    border-color: var(--darly-accent) !important;
+    color: white !important;
+}
+
+/* =============================================
+   Component Styles - Cards
+   ============================================= */
+
 .product-card {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .product-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 12px 24px rgba(252, 168, 144, 0.15);
+    box-shadow: 0 12px 24px rgba(141, 170, 166, 0.15);
 }
+
+/* =============================================
+   Component Styles - Badges & Tags
+   ============================================= */
+
+.badge-darly {
+    background-color: var(--darly-primary-light);
+    color: var(--darly-accent-dark);
+}
+
+/* =============================================
+   Component Styles - Forms
+   ============================================= */
+
+input[type="number"],
+select.form-control,
+input.form-control {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    text-align: center;
+    background: white;
+}
+
+input[type="number"]:focus,
+select.form-control:focus,
+input.form-control:focus {
+    outline: none;
+    border-color: var(--darly-primary);
+    box-shadow: 0 0 0 3px var(--darly-primary-light);
+}
+
+.ring-darly:focus {
+    --tw-ring-color: var(--darly-primary);
+}
+
+/* =============================================
+   Component Styles - Modals
+   ============================================= */
+
+.modal-content {
+    border: none;
+}
+
+.modal-header-darly {
+    background: linear-gradient(135deg, var(--darly-primary), var(--darly-primary-dark));
+}
+
+.close:hover {
+    opacity: 0.8;
+}
+
+/* =============================================
+   Component Styles - Icons
+   ============================================= */
+
+.icon-darly {
+    color: var(--darly-primary);
+}
+
+/* =============================================
+   Component Styles - Stars (Rating)
+   ============================================= */
+
+.star-filled {
+    color: var(--darly-accent);
+}
+
+/* =============================================
+   Component Styles - Cart Layout
+   ============================================= */
+
+@media (min-width: 1024px) {
+    .cart-container {
+        display: flex;
+        flex-direction: row;
+        gap: 1.5rem;
+    }
+    .cart-left {
+        flex-grow: 1;
+        width: 66.666667%;
+    }
+    .cart-right {
+        width: 33.333333%;
+    }
+}
+
+@media (max-width: 1023px) {
+    .cart-container {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+}
+
+/* =============================================
+   Component Styles - Bootstrap Overrides
+   ============================================= */
+
+.btn-outline-custom {
+    border: 2px solid var(--darly-accent);
+    color: var(--darly-accent);
+    background-color: transparent;
+    padding: 0.5rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.btn-outline-custom:hover {
+    background-color: var(--darly-accent);
+    color: white;
+}
+
+.custom-a {
+    color: var(--darly-accent);
+    text-decoration: underline;
+}
+
+.custom-a:hover {
+    color: var(--darly-accent-dark);
+}
+
+.custom-alert {
+    border-color: var(--darly-accent);
+}
+
+/* =============================================
+   Global Styles
+   ============================================= */
 
 /* Custom scrollbar for webkit browsers */
 ::-webkit-scrollbar {
@@ -36,23 +301,23 @@
 }
 
 ::-webkit-scrollbar-thumb {
-    background: rgb(252, 168, 144);
+    background: var(--darly-primary);
     border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: rgb(253, 148, 118);
+    background: var(--darly-accent-dark);
 }
 
 /* Selection color */
 ::selection {
-    background-color: rgba(252, 168, 144, 0.3);
+    background-color: var(--darly-primary-light);
     color: inherit;
 }
 
 /* Focus ring color override */
 *:focus {
-    outline-color: rgb(252, 168, 144);
+    outline-color: var(--darly-primary);
 }
 
 /* Smooth scroll behavior */
