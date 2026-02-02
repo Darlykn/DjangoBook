@@ -66,6 +66,15 @@
     background: linear-gradient(135deg, rgba(141, 170, 166, 1) 0%, rgba(141, 170, 166, 1) 100%);
 }
 
+.darly-wordmark {
+    font-family: "Montserrat", "Nunito", "Helvetica Neue", Arial, sans-serif;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 600;
+    line-height: 1.05;
+    text-shadow: 0 6px 16px rgba(0, 0, 0, 0.16);
+}
+
 /* =============================================
    Component Styles - Navigation
    ============================================= */

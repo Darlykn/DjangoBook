@@ -32,14 +32,17 @@ class ShopHome(DataMixin, ListView):
         return context
 
     def get_queryset(self):
-        queryset = super().get_queryset()
+        queryset = super().get_queryset().select_related('id_category')
         q = self.request.GET.get('q')  # получаем запрос поиска из параметров GET запроса
         if q:
-            queryset = queryset.filter(
-                Q(title__icontains=q) |
-                Q(author__icontains=q)
-            )
-        return queryset.select_related('id_category')
+            # Фильтрация на уровне Python для корректной работы с кириллицей
+            q_lower = q.lower()
+            filtered_ids = [
+                product.id for product in queryset
+                if q_lower in product.title.lower() or q_lower in product.author.lower()
+            ]
+            queryset = queryset.filter(id__in=filtered_ids)
+        return queryset
 
 
 class ProductDetailView(DataMixin, DetailView):
