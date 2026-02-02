@@ -1,37 +1,747 @@
-#header{
-  background-color: #fff !important;
-  color: #ff0000 !important;
-  box-shadow: 0px 0px 3px 0px #ff0000;
+/* =============================================
+   DARLY Admin Panel - Custom Styles
+   Primary: #8DAAA6 (teal)
+   Accent: #fd9476 (coral)
+   ============================================= */
+
+:root {
+    --darly-primary: #8DAAA6;
+    --darly-primary-dark: #5d7a76;
+    --darly-primary-light: rgba(141, 170, 166, 0.15);
+    --darly-accent: #fd9476;
+    --darly-accent-dark: #eb7a5b;
+    --darly-accent-light: rgba(253, 148, 118, 0.15);
+    --darly-dark: #2d3436;
+    --darly-text: #333333;
+    --darly-gray: #636e72;
+    --darly-light-gray: #b2bec3;
+    --darly-bg: #f8fafa;
+    --darly-white: #ffffff;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    /* Override Django admin CSS variables for object-tools */
+    --object-tools-fg: #ffffff;
+    --object-tools-bg: #8DAAA6;
 }
 
-#header a:link, #header a:visited{
-  color: #000 !important;
+/* =============================================
+   Header
+   ============================================= */
+#header {
+    background: linear-gradient(135deg, var(--darly-primary) 0%, var(--darly-primary-dark) 100%) !important;
+    color: var(--darly-white) !important;
+    box-shadow: var(--shadow-md);
+    padding: 12px 20px !important;
 }
 
-div.breadcrumbs{
-  background-color: #1c1f1f;
+#header a:link, 
+#header a:visited {
+    color: var(--darly-white) !important;
 }
 
-.module h2, .module caption, .inline-group h2{
-  background-color: #1c1f1f;
+#branding h1, 
+#branding h1 a:link, 
+#branding h1 a:visited {
+    color: var(--darly-white) !important;
+    font-weight: 700 !important;
 }
 
-.button, input[type=submit], input[type=button], .submit-row input, a.button{
-  background-color: #4e5557;
+#user-tools {
+    color: rgba(255,255,255,0.9) !important;
 }
 
-.button:active, input[type=submit]:active, input[type=button]:active, .button:focus, input[type=submit]:focus, input[type=button]:focus, .button:hover, input[type=submit]:hover, input[type=button]:hover{
-  background-color: #1f2121;
+#user-tools a {
+    color: var(--darly-white) !important;
 }
 
-.button.default, input[type=submit].default, .submit-row input.default{
-  background-color: #1c1f1f;
+/* =============================================
+   Breadcrumbs
+   ============================================= */
+div.breadcrumbs {
+    background: var(--darly-primary-dark) !important;
+    color: rgba(255,255,255,0.85) !important;
+    padding: 10px 20px !important;
 }
 
-.button.default:active, input[type=submit].default:active, .button.default:focus, input[type=submit].default:focus, .button.default:hover, input[type=submit].default:hover{
-  background-color: #1c1f1f;
+div.breadcrumbs a:link, 
+div.breadcrumbs a:visited {
+    color: var(--darly-white) !important;
 }
 
-a:link, a:visited{
-  color: #1c1f1f;
+/* =============================================
+   Body & Container
+   ============================================= */
+body {
+    background: var(--darly-bg) !important;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif !important;
+}
+
+#container {
+    background: var(--darly-bg);
+}
+
+#content {
+    padding: 20px !important;
+}
+
+/* =============================================
+   Module Headers
+   ============================================= */
+.module h2, 
+.module caption, 
+.inline-group h2 {
+    background: linear-gradient(135deg, var(--darly-primary) 0%, var(--darly-primary-dark) 100%) !important;
+    color: var(--darly-white) !important;
+    padding: 12px 16px !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0 !important;
+}
+
+.module {
+    background: var(--darly-white) !important;
+    border: none !important;
+    border-radius: var(--radius-md) !important;
+    box-shadow: var(--shadow-sm) !important;
+    margin-bottom: 20px !important;
+    overflow: hidden;
+}
+
+/* =============================================
+   Links - Black text on white backgrounds
+   ============================================= */
+a:link, 
+a:visited {
+    color: var(--darly-text);
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--darly-accent);
+}
+
+/* Object-tools buttons - ALWAYS white text (high specificity) */
+ul.object-tools li a,
+ul.object-tools li a:link,
+ul.object-tools li a:visited,
+ul.object-tools li a:hover,
+ul.object-tools li a:active,
+ul.object-tools li a:focus {
+    color: #ffffff !important;
+}
+
+/* Links inside tables - darker and readable */
+#result_list a:link,
+#result_list a:visited,
+.module table a:link,
+.module table a:visited {
+    color: var(--darly-text) !important;
+    font-weight: 500 !important;
+}
+
+#result_list a:hover,
+.module table a:hover {
+    color: var(--darly-accent) !important;
+}
+
+/* Object-tools in content-main - white text (higher specificity) */
+#content-main .object-tools a,
+#content-main .object-tools a:link,
+#content-main .object-tools a:visited,
+#content-main .object-tools a:hover,
+#content-main .object-tools a:active,
+#content-main ul.object-tools li a,
+#content-main ul.object-tools li a:link,
+#content-main ul.object-tools li a:visited,
+#content-main ul.object-tools li a:hover,
+#content-main ul.object-tools li a:active {
+    color: #ffffff !important;
+}
+
+/* Caption links stay white */
+caption a:link,
+caption a:visited {
+    color: var(--darly-white) !important;
+}
+
+caption a:hover {
+    color: var(--darly-white) !important;
+    opacity: 0.85;
+}
+
+/* =============================================
+   Buttons - Clean and consistent
+   ============================================= */
+.button, 
+input[type=submit], 
+input[type=button], 
+a.button {
+    background: var(--darly-accent) !important;
+    border: none !important;
+    color: var(--darly-white) !important;
+    padding: 10px 20px !important;
+    border-radius: var(--radius-sm) !important;
+    font-weight: 600 !important;
+    font-size: 13px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.03em !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    display: inline-block !important;
+    width: auto !important;
+    min-width: auto !important;
+}
+
+.button:hover, 
+input[type=submit]:hover, 
+input[type=button]:hover,
+a.button:hover {
+    background: var(--darly-accent-dark) !important;
+    transform: translateY(-1px) !important;
+}
+
+/* Submit row buttons */
+.submit-row input {
+    background: var(--darly-accent) !important;
+    border: none !important;
+    color: var(--darly-white) !important;
+    padding: 10px 16px !important;
+    border-radius: var(--radius-sm) !important;
+    font-weight: 600 !important;
+    font-size: 12px !important;
+    text-transform: uppercase !important;
+    cursor: pointer !important;
+    margin-right: 8px !important;
+}
+
+.submit-row input:hover {
+    background: var(--darly-accent-dark) !important;
+}
+
+/* Default button - primary color */
+.button.default, 
+input[type=submit].default, 
+.submit-row input.default {
+    background: var(--darly-primary) !important;
+}
+
+.button.default:hover, 
+input[type=submit].default:hover,
+.submit-row input.default:hover {
+    background: var(--darly-primary-dark) !important;
+}
+
+/* Delete button */
+.deletelink,
+a.deletelink:link,
+a.deletelink:visited,
+.submit-row .deletelink {
+    background: #e74c3c !important;
+    color: var(--darly-white) !important;
+    padding: 10px 16px !important;
+    border-radius: var(--radius-sm) !important;
+    text-decoration: none !important;
+    font-weight: 600 !important;
+    display: inline-block !important;
+}
+
+.deletelink:hover,
+a.deletelink:hover {
+    background: #c0392b !important;
+}
+
+/* =============================================
+   Actions Bar - Fix button width
+   ============================================= */
+.actions {
+    padding: 10px 0 !important;
+}
+
+.actions select {
+    border: 2px solid var(--darly-primary) !important;
+    border-radius: var(--radius-sm) !important;
+    padding: 8px 12px !important;
+    min-width: 200px !important;
+    color: var(--darly-text) !important;
+    background: var(--darly-white) !important;
+}
+
+.actions .button {
+    padding: 8px 16px !important;
+    margin-left: 8px !important;
+    width: auto !important;
+    min-width: auto !important;
+    display: inline-block !important;
+}
+
+.actions label {
+    color: var(--darly-text) !important;
+    font-weight: 500 !important;
+}
+
+/* =============================================
+   Tables
+   ============================================= */
+#result_list {
+    border-radius: var(--radius-md) !important;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+#result_list th {
+    background: var(--darly-primary-light) !important;
+    color: var(--darly-dark) !important;
+    font-weight: 600 !important;
+    padding: 12px !important;
+    border-bottom: 2px solid var(--darly-primary) !important;
+}
+
+#result_list th a:link,
+#result_list th a:visited {
+    color: var(--darly-dark) !important;
+}
+
+#result_list td {
+    padding: 10px 12px !important;
+    border-bottom: 1px solid #eef2f3 !important;
+    color: var(--darly-text) !important;
+}
+
+#result_list tr:hover td {
+    background: var(--darly-primary-light) !important;
+}
+
+#result_list tr.row1 {
+    background: var(--darly-white) !important;
+}
+
+#result_list tr.row2 {
+    background: #fafbfb !important;
+}
+
+/* =============================================
+   Sidebar / Filter
+   ============================================= */
+#changelist-filter {
+    background: var(--darly-white) !important;
+    border-radius: var(--radius-md) !important;
+    box-shadow: var(--shadow-sm) !important;
+    padding: 0 !important;
+    overflow: hidden;
+}
+
+#changelist-filter h2 {
+    background: linear-gradient(135deg, var(--darly-primary) 0%, var(--darly-primary-dark) 100%) !important;
+    color: var(--darly-white) !important;
+    padding: 12px 16px !important;
+    font-size: 13px !important;
+    text-transform: uppercase;
+    margin: 0 !important;
+}
+
+#changelist-filter h3 {
+    background: var(--darly-primary-light) !important;
+    color: var(--darly-dark) !important;
+    padding: 10px 16px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    margin: 0 !important;
+    border-bottom: 1px solid #e8edee;
+}
+
+#changelist-filter ul {
+    padding: 8px 0 !important;
+    margin: 0 !important;
+}
+
+#changelist-filter li {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+#changelist-filter a {
+    padding: 8px 16px !important;
+    display: block !important;
+    color: var(--darly-text) !important;
+}
+
+#changelist-filter a:hover {
+    background: var(--darly-accent-light) !important;
+    color: var(--darly-accent-dark) !important;
+}
+
+#changelist-filter li.selected a {
+    background: var(--darly-accent) !important;
+    color: var(--darly-white) !important;
+    font-weight: 600 !important;
+}
+
+/* =============================================
+   Forms
+   ============================================= */
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="number"],
+input[type="url"],
+textarea,
+select {
+    border: 2px solid #e0e6e8 !important;
+    border-radius: var(--radius-sm) !important;
+    padding: 10px 14px !important;
+    font-size: 14px !important;
+    background: var(--darly-white) !important;
+    color: var(--darly-text) !important;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus,
+input[type="number"]:focus,
+input[type="url"]:focus,
+textarea:focus,
+select:focus {
+    border-color: var(--darly-primary) !important;
+    box-shadow: 0 0 0 3px var(--darly-primary-light) !important;
+    outline: none !important;
+}
+
+/* Labels */
+label {
+    color: var(--darly-text) !important;
+    font-weight: 500 !important;
+}
+
+/* =============================================
+   Object Tools (Add/History buttons)
+   ============================================= */
+.object-tools {
+    margin: 0 0 15px 0 !important;
+}
+
+.object-tools a:link,
+.object-tools a:visited {
+    background: var(--darly-primary) !important;
+    color: var(--darly-white) !important;
+    padding: 8px 14px !important;
+    border-radius: var(--radius-sm) !important;
+    font-weight: 600 !important;
+    font-size: 12px !important;
+    text-transform: uppercase !important;
+}
+
+.object-tools a:hover {
+    background: var(--darly-primary-dark) !important;
+    color: var(--darly-white) !important;
+}
+
+/* Add another inline */
+.add-row a:link,
+.add-row a:visited {
+    background: var(--darly-primary-light) !important;
+    color: var(--darly-primary-dark) !important;
+    padding: 6px 12px !important;
+    border-radius: var(--radius-sm) !important;
+    font-weight: 600 !important;
+}
+
+.add-row a:hover {
+    background: var(--darly-primary) !important;
+    color: var(--darly-white) !important;
+}
+
+/* =============================================
+   Submit Row
+   ============================================= */
+.submit-row {
+    background: var(--darly-bg) !important;
+    border: 1px solid #e0e6e8 !important;
+    border-radius: var(--radius-md) !important;
+    padding: 15px !important;
+    margin-top: 20px !important;
+}
+
+/* =============================================
+   Messages / Alerts
+   ============================================= */
+ul.messagelist {
+    padding: 0 !important;
+    margin: 0 0 20px 0 !important;
+}
+
+ul.messagelist li {
+    padding: 12px 20px !important;
+    border-radius: var(--radius-sm) !important;
+    margin-bottom: 10px !important;
+    font-weight: 500 !important;
+}
+
+ul.messagelist li.success {
+    background: #27ae60 !important;
+    color: var(--darly-white) !important;
+}
+
+ul.messagelist li.warning {
+    background: #f39c12 !important;
+    color: var(--darly-white) !important;
+}
+
+ul.messagelist li.error {
+    background: #e74c3c !important;
+    color: var(--darly-white) !important;
+}
+
+ul.messagelist li.info {
+    background: var(--darly-primary) !important;
+    color: var(--darly-white) !important;
+}
+
+/* =============================================
+   Pagination
+   ============================================= */
+.paginator {
+    background: var(--darly-white) !important;
+    padding: 12px 16px !important;
+    border-radius: var(--radius-sm) !important;
+    border: 1px solid #e0e6e8 !important;
+    color: var(--darly-text) !important;
+}
+
+.paginator a:link,
+.paginator a:visited {
+    background: var(--darly-primary-light) !important;
+    color: var(--darly-primary-dark) !important;
+    padding: 6px 12px !important;
+    border-radius: 4px !important;
+    margin: 0 2px !important;
+}
+
+.paginator a:hover {
+    background: var(--darly-accent) !important;
+    color: var(--darly-white) !important;
+}
+
+/* =============================================
+   Checkbox & Radio
+   ============================================= */
+input[type="checkbox"],
+input[type="radio"] {
+    accent-color: var(--darly-accent) !important;
+    width: 18px !important;
+    height: 18px !important;
+    cursor: pointer !important;
+}
+
+/* =============================================
+   Inline Groups
+   ============================================= */
+.inline-related h3 {
+    background: var(--darly-primary-light) !important;
+    color: var(--darly-dark) !important;
+    padding: 10px 16px !important;
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0 !important;
+}
+
+/* =============================================
+   Help Text
+   ============================================= */
+.help,
+p.help {
+    color: var(--darly-gray) !important;
+    font-size: 12px !important;
+}
+
+/* =============================================
+   Login Page
+   ============================================= */
+body.login {
+    background: linear-gradient(135deg, var(--darly-primary) 0%, var(--darly-primary-dark) 100%) !important;
+}
+
+body.login #container {
+    background: transparent !important;
+}
+
+body.login #content {
+    background: var(--darly-white) !important;
+    border-radius: var(--radius-md) !important;
+    box-shadow: var(--shadow-md) !important;
+    padding: 30px !important;
+}
+
+body.login h1 {
+    color: var(--darly-primary) !important;
+}
+
+body.login #header {
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+body.login #header h1 a {
+    color: var(--darly-white) !important;
+}
+
+/* =============================================
+   Dashboard / Index specific
+   ============================================= */
+#content-main .module table th {
+    background: transparent !important;
+    color: var(--darly-gray) !important;
+    font-weight: 600 !important;
+    text-transform: uppercase;
+    font-size: 11px !important;
+    padding: 10px 16px !important;
+}
+
+#content-main .module table td {
+    padding: 10px 16px !important;
+    border-bottom: 1px solid #eef2f3 !important;
+    color: var(--darly-text) !important;
+}
+
+#content-main .module table tr:hover td {
+    background: var(--darly-primary-light) !important;
+}
+
+/* Recent actions list */
+#recent-actions-module li {
+    color: var(--darly-text) !important;
+}
+
+/* =============================================
+   Calendar & Date/Time Widgets
+   ============================================= */
+.calendar caption,
+.calendarbox h2 {
+    background: var(--darly-primary) !important;
+    color: var(--darly-white) !important;
+}
+
+/* =============================================
+   Related Widget
+   ============================================= */
+.related-widget-wrapper-link {
+    color: var(--darly-primary) !important;
+}
+
+.related-widget-wrapper-link:hover {
+    color: var(--darly-accent) !important;
+}
+
+/* =============================================
+   Text colors for content areas
+   ============================================= */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--darly-dark) !important;
+}
+
+p, span, div {
+    color: var(--darly-text);
+}
+
+/* Ensure breadcrumb text is white */
+div.breadcrumbs,
+div.breadcrumbs * {
+    color: rgba(255,255,255,0.9) !important;
+}
+
+/* Header text white */
+#header,
+#header * {
+    color: var(--darly-white) !important;
+}
+
+/* Module headers white */
+.module h2,
+.module h2 *,
+.module caption,
+.module caption * {
+    color: var(--darly-white) !important;
+}
+
+/* Module header links hover - stay white */
+.module h2 a:hover,
+.module caption a:hover {
+    color: var(--darly-white) !important;
+    opacity: 0.8;
+}
+
+/* =============================================
+   Product Thumbnails in List View
+   ============================================= */
+.admin-thumbnail {
+    width: 50px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+    vertical-align: middle;
+}
+
+#result_list td:last-child {
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* =============================================
+   Responsive
+   ============================================= */
+@media (max-width: 767px) {
+    #header {
+        padding: 10px 15px !important;
+    }
+    
+    #content {
+        padding: 15px !important;
+    }
+    
+    .submit-row {
+        padding: 12px !important;
+    }
+    
+    .object-tools a:link,
+    .object-tools a:visited {
+        padding: 6px 10px !important;
+        font-size: 11px !important;
+    }
+}
+
+/* =============================================
+   FORCE WHITE TEXT ON OBJECT-TOOLS BUTTONS
+   This rule must be at the end to override all others
+   ============================================= */
+ul.object-tools li a,
+ul.object-tools li a:link,
+ul.object-tools li a:visited,
+ul.object-tools li a:hover,
+ul.object-tools li a:active,
+ul.object-tools li a:focus,
+ul.object-tools li a.addlink,
+ul.object-tools li a.addlink:link,
+ul.object-tools li a.addlink:visited,
+ul.object-tools li a.addlink:hover,
+ul.object-tools li a.addlink:active,
+ul.object-tools li a.addlink:focus,
+.object-tools a,
+.object-tools a:link,
+.object-tools a:visited,
+.object-tools a:hover,
+.object-tools a:active,
+.object-tools a:focus,
+.object-tools a.addlink,
+.object-tools a.addlink:link,
+.object-tools a.addlink:visited,
+.object-tools a.addlink:hover,
+.object-tools a.addlink:active,
+.object-tools a.addlink:focus,
+a.addlink,
+a.addlink:link,
+a.addlink:visited,
+a.addlink:hover,
+a.addlink:active,
+a.addlink:focus {
+    color: #ffffff !important;
 }

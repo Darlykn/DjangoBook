@@ -25,7 +25,7 @@ class ProductAdmin(admin.ModelAdmin):
     def get_html_photo(self, object):  # object тут ссылается на запись из таблицы (ЭК модели Product)
         if object.image:
             return mark_safe(
-                f"<img src='{object.image.url}' width=65>")  # ф-ия mark_safe позволяет не экранировать то, что мы в нее передаем
+                f"<img src='{object.image.url}' class='admin-thumbnail'>")  # ф-ия mark_safe позволяет не экранировать то, что мы в нее передаем
 
     get_html_photo.short_description = 'Миниатюра '
 
