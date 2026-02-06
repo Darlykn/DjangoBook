@@ -56,6 +56,51 @@
     color: var(--darly-white) !important;
 }
 
+/* Logout in header - same style as "Open site" / "Change password" (underline, uppercase) */
+#user-tools a.button,
+#user-tools .button,
+#user-tools input[type=submit],
+#user-tools button[type=submit],
+#header a.button,
+#header .button,
+#header input[type=submit],
+#header button[type=submit] {
+    background: none !important;
+    border: none !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    font-weight: inherit !important;
+    font-size: inherit !important;
+    text-transform: uppercase !important;
+    letter-spacing: inherit !important;
+    color: var(--darly-white) !important;
+    text-decoration: underline !important;
+    display: inline !important;
+    box-shadow: none !important;
+    cursor: pointer !important;
+}
+
+#user-tools a.button:hover,
+#user-tools .button:hover,
+#user-tools input[type=submit]:hover,
+#user-tools button[type=submit]:hover,
+#header a.button:hover,
+#header .button:hover,
+#header input[type=submit]:hover,
+#header button[type=submit]:hover {
+    background: none !important;
+    transform: none !important;
+    color: var(--darly-white) !important;
+    text-decoration: underline !important;
+    opacity: 0.85;
+}
+
+/* Hide theme toggle button (white square) in header */
+#header button[type=button],
+#user-tools button[type=button] {
+    display: none !important;
+}
+
 /* =============================================
    Breadcrumbs
    ============================================= */
@@ -177,7 +222,8 @@ caption a:hover {
 .button, 
 input[type=submit], 
 input[type=button], 
-a.button {
+a.button,
+button[type=submit] {
     background: var(--darly-accent) !important;
     border: none !important;
     color: var(--darly-white) !important;
@@ -189,9 +235,26 @@ a.button {
     letter-spacing: 0.03em !important;
     cursor: pointer !important;
     transition: all 0.2s ease !important;
-    display: inline-block !important;
     width: auto !important;
     min-width: auto !important;
+    text-align: center !important;
+    line-height: 1 !important;
+    vertical-align: middle !important;
+    box-sizing: border-box !important;
+}
+
+/* button and a.button: flex centering for perfect text alignment */
+button.button,
+a.button,
+button[type=submit] {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+input[type=submit],
+input[type=button] {
+    display: inline-block !important;
 }
 
 .button:hover, 
@@ -214,6 +277,8 @@ a.button:hover {
     text-transform: uppercase !important;
     cursor: pointer !important;
     margin-right: 8px !important;
+    text-align: center !important;
+    line-height: 1.25 !important;
 }
 
 .submit-row input:hover {
@@ -233,10 +298,7 @@ input[type=submit].default:hover,
     background: var(--darly-primary-dark) !important;
 }
 
-/* Delete button */
-.deletelink,
-a.deletelink:link,
-a.deletelink:visited,
+/* Delete button - only in submit row (form actions) */
 .submit-row .deletelink {
     background: #e74c3c !important;
     color: var(--darly-white) !important;
@@ -247,9 +309,16 @@ a.deletelink:visited,
     display: inline-block !important;
 }
 
-.deletelink:hover,
-a.deletelink:hover {
+.submit-row .deletelink:hover {
     background: #c0392b !important;
+}
+
+/* Delete action in recent actions - show red X icon like add/change icons */
+#recent-actions-module li.deletelink {
+    background: url(../img/icon-deletelink.svg) 0 1px/14px 14px no-repeat !important;
+    padding-left: 18px !important;
+    color: var(--darly-text) !important;
+    font-weight: 500 !important;
 }
 
 /* =============================================
@@ -264,16 +333,25 @@ a.deletelink:hover {
     border-radius: var(--radius-sm) !important;
     padding: 8px 12px !important;
     min-width: 200px !important;
+    width: auto !important;
+    max-width: none !important;
     color: var(--darly-text) !important;
     background: var(--darly-white) !important;
 }
 
-.actions .button {
+.actions .button,
+.actions button[type="submit"] {
     padding: 8px 16px !important;
     margin-left: 8px !important;
     width: auto !important;
     min-width: auto !important;
-    display: inline-block !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    line-height: 1 !important;
+    vertical-align: middle !important;
+    box-sizing: border-box !important;
 }
 
 .actions label {
@@ -394,6 +472,17 @@ select {
     font-size: 14px !important;
     background: var(--darly-white) !important;
     color: var(--darly-text) !important;
+    box-sizing: border-box !important;
+}
+
+select {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-right: 32px !important;
+    appearance: auto !important;
+    -webkit-appearance: menulist !important;
+    -moz-appearance: menulist !important;
+    text-overflow: ellipsis !important;
 }
 
 input[type="text"]:focus,
@@ -472,29 +561,32 @@ ul.messagelist {
 }
 
 ul.messagelist li {
-    padding: 12px 20px !important;
+    padding: 12px 20px 12px 44px !important;
     border-radius: var(--radius-sm) !important;
     margin-bottom: 10px !important;
     font-weight: 500 !important;
+    background-position: 12px center !important;
+    background-repeat: no-repeat !important;
+    background-size: 20px 20px !important;
 }
 
 ul.messagelist li.success {
-    background: #27ae60 !important;
+    background-color: #27ae60 !important;
     color: var(--darly-white) !important;
 }
 
 ul.messagelist li.warning {
-    background: #f39c12 !important;
+    background-color: #f39c12 !important;
     color: var(--darly-white) !important;
 }
 
 ul.messagelist li.error {
-    background: #e74c3c !important;
+    background-color: #e74c3c !important;
     color: var(--darly-white) !important;
 }
 
 ul.messagelist li.info {
-    background: var(--darly-primary) !important;
+    background-color: var(--darly-primary) !important;
     color: var(--darly-white) !important;
 }
 

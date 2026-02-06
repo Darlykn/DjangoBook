@@ -38,7 +38,11 @@
     </a>
     {% empty %}
     <div class="col-span-full text-center py-12">
-        <p class="text-gray-500 text-lg">Товары не найдены</p>
+        {% if category %}
+            <p class="text-gray-500 text-lg">В данной категории пока нет товаров</p>
+        {% else %}
+            <p class="text-gray-500 text-lg">Товары не найдены</p>
+        {% endif %}
     </div>
     {% endfor %}
 </div>
