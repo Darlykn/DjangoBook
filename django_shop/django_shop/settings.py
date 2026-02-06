@@ -137,7 +137,7 @@ MESSAGE_TAGS = {
 
 # Django Vite настройки
 # VITE_DEV_MODE=True когда запущен Vite dev server (npm run dev), False для production сборки
-VITE_DEV_MODE = False  # Поменять на True если запускаете `npm run dev` для HMR
+VITE_DEV_MODE = False  
 
 DJANGO_VITE = {
     "default": {
